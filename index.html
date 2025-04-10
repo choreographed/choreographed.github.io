@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INTERNET MONARCH</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        html, body {
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+        }
+        body {
+            font-family: 'Orbitron', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #0a0a0a;
+            color: #00ffcc;
+            cursor: default;
+            overscroll-behavior: none;
+            position: fixed;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(255, 0, 140, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(0, 255, 204, 0.1) 0%, transparent 40%);
+        }
+        header {
+            text-align: center;
+            padding: 6rem 0 2rem 0;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            text-shadow: 0 0 10px #ff00aa, 0 0 20px #ff00aa;
+            animation: textFlicker 5s infinite alternate;
+        }
+        header h2 {
+            color: #ff00aa;
+            text-shadow: 0 0 5px #ff00aa;
+        }
+        @keyframes textFlicker {
+            0%, 18%, 22%, 25%, 53%, 57%, 100% { text-shadow: 0 0 10px #ff00aa, 0 0 20px #ff00aa; }
+            20%, 24%, 55% { text-shadow: none; }
+        }
+        main {
+            padding: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .ascii-art {
+            font-family: monospace;
+            white-space: pre;
+            text-align: center;
+            line-height: 1;
+            margin-bottom: 2rem;
+            font-size: 10px;
+            max-height: 60vh;
+            overflow: hidden;
+            color: #ff00aa;
+            text-shadow: 0 0 5px #00ffcc;
+            display: flex;
+            justify-content: center;
+        }
+        .particle {
+            position: absolute;
+            pointer-events: none;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+            line-height: 1;
+            will-change: transform;
+            contain: content;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>INTERNET MONARCH</h1>
+        <h2>Fear the Lamb</h2>
+    </header>
+    <main>
+        <div class="ascii-art">
+          .:*~*:._.:*~*:._.:*~*:._.:*~*:._.:*~*:._.:*~*:._.:*~*:.
+          )     ___     ___     ___     ___     ___     ___     (
+         )    (o o)   (o o)   (o o)   (o o)   (o o)   (o o)    (
+        )     ( V )   ( V )   ( V )   ( V )   ( V )   ( V )     (
+        )     /( )\   /( )\   /( )\   /( )\   /( )\   /( )\     (
+        )      ^ ^     ^ ^     ^ ^     ^ ^     ^ ^     ^ ^      (
+          .:*~*:._.:*~*:._.:*~*:._.:*~*:._.:*~*:._.:*~*:._.:*~*:.
+        </div>
+    </main>
+
+    <script>
+        // Security measures
+        document.body.style.userSelect = 'none';
+        document.body.style.webkitUserSelect = 'none';
+        document.body.style.msUserSelect = 'none';
+
+        document.addEventListener('copy', function(e) {
+            e.preventDefault();
+            return false;
+        });
+
+        document.addEventListener('dragstart', function(e) {
+            e.preventDefault();
+            return false;
+        });
+
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        document.onkeydown = function(e) {
+            if (
+                e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67) ||
+                e.keyCode === 123 ||
+                (e.ctrlKey && (e.keyCode === 85 || e.keyCode === 86 || e.keyCode === 67 || e.keyCode === 117))
+            ) {
+                e.preventDefault();
+                return false;
+            }
+            return true;
+        };
+
+        // Enhanced particle effect code
+        let lastX = 0;
+        let lastY = 0;
+        let particles = [];
+        const symbols = ['0', '1', '#', '$', '%', '&', '+', '*', '>', '<', '!', '='];
+
+        function createParticle(x, y) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            
+            const randomSymbol = symbols[Math.floor(Math.random() * symbols.length)];
+            particle.textContent = randomSymbol;
+            
+            const colors = ['#00ffcc', '#ff00aa'];
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            particle.style.color = color;
+            particle.style.textShadow = `0 0 5px ${color}`;
+            
+            const size = Math.random() * 8 + 10;
+            particle.style.fontSize = `${size}px`;
+            
+            particle.style.left = `${x}px`;
+            particle.style.top = `${y}px`;
+            
+            document.body.appendChild(particle);
+            particles.push(particle);
+
+            const velocity = {
+                x: (Math.random() - 0.5) * 3,
+                y: Math.random() * 2 - 1
+            };
+            
+            const lifetime = Math.random() * 1000 + 500;
+            const startTime = Date.now();
+            
+            function updateParticle() {
+                const elapsedTime = Date.now() - startTime;
+                if (elapsedTime > lifetime) {
+                    particle.style.opacity = '0';
+                    setTimeout(() => {
+                        particle.remove();
+                        particles = particles.filter(p => p !== particle);
+                    }, 300);
+                    return;
+                }
+                
+                const currentX = parseFloat(particle.style.left);
+                const currentY = parseFloat(particle.style.top);
+                
+                particle.style.left = `${currentX + velocity.x}px`;
+                particle.style.top = `${currentY + velocity.y}px`;
+                
+                requestAnimationFrame(updateParticle);
+            }
+            
+            requestAnimationFrame(updateParticle);
+        }
+
+        function interpolateParticles(x1, y1, x2, y2) {
+            const distance = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+            const count = Math.floor(distance / 8);
+            
+            for (let i = 0; i < count; i++) {
+                const ratio = i / count;
+                const x = x1 + (x2 - x1) * ratio;
+                const y = y1 + (y2 - y1) * ratio;
+                createParticle(x, y);
+            }
+        }
+
+        document.addEventListener('mousemove', function(e) {
+            interpolateParticles(lastX, lastY, e.clientX, e.clientY);
+            lastX = e.clientX;
+            lastY = e.clientY;
+        });
+
+        function animate() {
+            requestAnimationFrame(animate);
+            particles.forEach(particle => {
+                const rect = particle.getBoundingClientRect();
+                if (rect.bottom < 0 || rect.top > window.innerHeight || 
+                    rect.right < 0 || rect.left > window.innerWidth) {
+                    particle.remove();
+                    particles = particles.filter(p => p !== particle);
+                }
+            });
+        }
+
+        animate();
+    </script>
+</body>
+</html>
