@@ -6,47 +6,180 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>INTERNET MONARCH</title>
     <style>
-        /* ... (keep all existing styles the same) ... */
-
-        /* Mobile tap area styling */
-        .mobile-tap-area {
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background-color: #000000;
+        }
+        body {
+            background-color: #000000;
+            color: #00b4ff;
+            font-family: 'Courier New', monospace;
+            line-height: 1.2;
+            cursor: default;
+            padding: 0;
+            white-space: pre;
+            text-shadow: 0 0 5px #0066ff;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #000000;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #003366;
+            border-radius: 6px;
+            border: 2px solid #000000;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00b4ff;
+        }
+        .header {
+            padding: 20px;
+            border-bottom: 1px solid #00b4ff;
+            margin-bottom: 20px;
+            position: sticky;
+            top: 0;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 100;
+        }
+        .title {
+            color: white;
+            font-size: 2.5rem;
+            margin: 0;
+            padding: 0;
+            text-shadow: 0 0 10px white;
+        }
+        .quote {
+            color: #00b4ff;
+            font-style: italic;
+            margin: 5px 0 0 0;
+            padding: 0;
+        }
+        .terminal-container {
+            padding: 0 20px 20px 20px;
+        }
+        .terminal-line {
+            margin-bottom: 0.5em;
+            opacity: 0;
+            padding-left: 20px;
+            animation: fadeIn 0.5s ease-in forwards;
+        }
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 20px;
+            background-color: #00b4ff;
+            animation: blink 1s infinite;
+            vertical-align: middle;
+            margin-left: 2px;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        .input-line {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+        .prompt {
+            color: #00ff00;
+            margin-right: 8px;
+        }
+        .enter-prompt {
+            animation: slowBlink 2s infinite;
+        }
+        @keyframes slowBlink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        .continue-prompt {
+            color: #ff00aa;
+            font-size: 0.9em;
+            margin-top: 10px;
+            animation: slowPulse 3s infinite;
+        }
+        @keyframes slowPulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+        /* Command input styling */
+        #command-input {
+            background: transparent;
+            border: none;
+            color: #00b4ff;
+            font-family: 'Courier New', monospace;
+            outline: none;
+            width: 80%;
+            flex-grow: 1;
+            font-size: inherit;
+        }
+        /* Mobile-specific styles */
+        @media (max-width: 768px) {
+            .title {
+                font-size: 1.8rem;
+                margin-top: 20px;
+            }
+            .header {
+                padding: 15px;
+            }
+            .terminal-line {
+                padding-left: 10px;
+                font-size: 14px;
+                white-space: pre-wrap;
+                word-break: break-word;
+            }
+            .cursor {
+                height: 16px;
+                width: 8px;
+            }
+            #command-input {
+                width: 70%;
+            }
+            /* Hide enter prompt on mobile */
+            .enter-prompt, .continue-prompt {
+                display: none !important;
+            }
+        }
+        /* Mobile input form */
+        .mobile-input-form {
+            display: none;
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-            height: 80px;
-            background: transparent;
-            z-index: 1000;
-            display: none; /* Hidden by default */
-            text-align: center;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 10px;
+            border-top: 1px solid #00b4ff;
         }
-        .mobile-tap-prompt {
-            color: #00b4ff;
-            margin-bottom: 10px;
-        }
-        .mobile-tap-prompt.continue {
-            color: #ff00aa;
-        }
-
-        /* Hide mobile tap area on desktop */
-        @media (min-width: 769px) {
-            .mobile-tap-area {
-                display: none !important;
-            }
-        }
-        /* Show mobile tap area only on mobile */
         @media (max-width: 768px) {
-            .enter-prompt {
-                display: none !important;
-            }
-            .mobile-tap-area {
+            .mobile-input-form {
                 display: block;
+            }
+            #input-container {
+                display: none !important;
             }
         }
     </style>
 </head>
 <body>
-    <!-- ... (keep header and other HTML the same) ... -->
+    <div class="header">
+        <h1 class="title">INTERNET MONARCH</h1>
+        <p class="quote">"Maybe we're even more screwed up than he was but in socially acceptable ways."</p>
+        <div class="nav-buttons">
+            <a href="blog.html" class="blog-button">[BLOG]</a>
+        </div>
+    </div>
 
     <div class="terminal-container">
         <div class="terminal-line" style="animation-delay: 0s">SYSTEM v1.5</div>
@@ -61,10 +194,29 @@
         </div>
     </div>
 
-    <!-- Mobile-only tap area -->
-    <div class="mobile-tap-area" id="mobileTapArea">
-        <div class="mobile-tap-prompt" id="mobileTapPrompt">Tap to begin</div>
-    </div>
+    <!-- Mobile input form (hidden on desktop) -->
+    <form class="mobile-input-form" id="mobileInputForm">
+        <div style="display: flex; align-items: center;">
+            <span class="prompt">></span>
+            <input type="text" id="mobile-command-input" autocomplete="off" style="
+                background: transparent;
+                border: none;
+                color: #00b4ff;
+                font-family: 'Courier New', monospace;
+                outline: none;
+                flex-grow: 1;
+                font-size: 14px;
+            ">
+            <button type="submit" style="
+                background: transparent;
+                border: 1px solid #00b4ff;
+                color: #00b4ff;
+                font-family: 'Courier New', monospace;
+                padding: 5px 10px;
+                margin-left: 10px;
+            ">DONE</button>
+        </div>
+    </form>
 
     <script>
         // Login sequence steps
@@ -93,66 +245,50 @@
         const commandInput = document.getElementById('command-input');
         const continuePrompt = document.getElementById('continue-prompt');
         const inputCursor = document.getElementById('input-cursor');
-        const mobileTapArea = document.getElementById('mobileTapArea');
-        const mobileTapPrompt = document.getElementById('mobileTapPrompt');
+        const mobileInputForm = document.getElementById('mobileInputForm');
+        const mobileCommandInput = document.getElementById('mobile-command-input');
         let sequenceStarted = false;
 
-        // Detect if mobile device
+        // Detect mobile device
         function isMobileDevice() {
             return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
         }
 
+        // Initialize terminal based on device type
         function initTerminal() {
-            // Set up mobile tap area if on mobile
             if (isMobileDevice()) {
-                mobileTapArea.style.display = 'block';
-                
-                mobileTapArea.addEventListener('click', handleMobileTap);
+                // Mobile setup
+                document.addEventListener('DOMContentLoaded', startMobileSequence);
+                mobileInputForm.addEventListener('submit', handleMobileCommand);
             } else {
-                // Desktop - use keyboard
+                // Desktop setup
                 document.addEventListener('keydown', handleKeyPress);
             }
         }
 
-        function handleMobileTap() {
+        // Start sequence on mobile (immediately since we're tapping DONE)
+        function startMobileSequence() {
             if (!sequenceStarted) {
-                document.querySelector('.enter-prompt').style.display = 'none';
                 sequenceStarted = true;
-                mobileTapPrompt.textContent = "Tap to continue";
-                mobileTapPrompt.className = "mobile-tap-prompt continue";
+                advanceSequence();
             }
-            
-            if (currentStep < loginSteps.length) {
-                const newLine = document.createElement('div');
-                newLine.className = 'terminal-line';
-                newLine.textContent = loginSteps[currentStep];
-                loginContainer.appendChild(newLine);
-                
-                window.scrollTo({
-                    top: document.body.scrollHeight,
-                    behavior: 'smooth'
-                });
-                
-                currentStep++;
-                
-                if (currentStep === loginSteps.length) {
-                    mobileTapArea.style.display = 'none';
-                    inputContainer.style.display = 'flex';
-                    commandInput.focus();
+        }
+
+        // Handle desktop key presses
+        function handleKeyPress(e) {
+            if (e.key === 'Enter') {
+                if (!sequenceStarted) {
+                    document.querySelector('.enter-prompt').style.display = 'none';
+                    sequenceStarted = true;
+                    continuePrompt.style.display = 'block';
+                } else if (currentStep < loginSteps.length) {
+                    advanceSequence();
                 }
             }
         }
 
-        function handleKeyPress(e) {
-            // Only handle Enter key
-            if (e.key !== 'Enter') return;
-            
-            if (!sequenceStarted) {
-                document.querySelector('.enter-prompt').style.display = 'none';
-                sequenceStarted = true;
-                continuePrompt.style.display = 'block';
-            }
-            
+        // Advance the terminal sequence
+        function advanceSequence() {
             if (currentStep < loginSteps.length) {
                 const newLine = document.createElement('div');
                 newLine.className = 'terminal-line';
@@ -168,16 +304,119 @@
                 
                 if (currentStep === loginSteps.length) {
                     continuePrompt.style.display = 'none';
-                    inputContainer.style.display = 'flex';
-                    commandInput.focus();
+                    if (isMobileDevice()) {
+                        mobileCommandInput.focus();
+                    } else {
+                        inputContainer.style.display = 'flex';
+                        commandInput.focus();
+                    }
                 }
             }
         }
 
-        // ... (keep the rest of the JavaScript the same, including command processing, time update, and security measures) ...
+        // Process commands (both desktop and mobile)
+        function processCommand(command) {
+            const responseLine = document.createElement('div');
+            responseLine.className = 'terminal-line';
+            
+            switch(command.toLowerCase()) {
+                case 'help':
+                    responseLine.textContent = "> Available commands: help, clear, blog, about";
+                    break;
+                case 'clear':
+                    loginContainer.innerHTML = '';
+                    return;
+                case 'blog':
+                    responseLine.textContent = "> Opening blog...";
+                    loginContainer.appendChild(responseLine);
+                    setTimeout(() => {
+                        window.location.href = 'blog.html';
+                    }, 500);
+                    return;
+                case 'about':
+                    responseLine.textContent = "> INTERNET MONARCH v1.5 - A digital consciousness";
+                    break;
+                default:
+                    responseLine.textContent = `> Unknown command: ${command}. Type 'help' for available commands.`;
+            }
+            
+            loginContainer.appendChild(responseLine);
+            window.scrollTo({
+                top: document.body.scrollHeight,
+                behavior: 'smooth'
+            });
+        }
 
-        // Initialize when DOM loads
-        document.addEventListener('DOMContentLoaded', initTerminal);
+        // Handle mobile command submission
+        function handleMobileCommand(e) {
+            e.preventDefault();
+            const command = mobileCommandInput.value.trim();
+            if (command) {
+                // Add command to terminal
+                const commandLine = document.createElement('div');
+                commandLine.className = 'terminal-line';
+                commandLine.innerHTML = `<span class="prompt">></span> ${command}`;
+                loginContainer.appendChild(commandLine);
+                
+                // Process command
+                processCommand(command);
+                
+                // Clear input
+                mobileCommandInput.value = '';
+                
+                // Scroll to bottom
+                window.scrollTo({
+                    top: document.body.scrollHeight,
+                    behavior: 'smooth'
+                });
+            }
+        }
+
+        // Handle desktop command input
+        commandInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                const command = commandInput.value.trim();
+                commandInput.value = '';
+                
+                if (command) {
+                    const commandLine = document.createElement('div');
+                    commandLine.className = 'terminal-line';
+                    commandLine.innerHTML = `<span class="prompt">></span> ${command}`;
+                    loginContainer.appendChild(commandLine);
+                    
+                    processCommand(command);
+                    
+                    window.scrollTo({
+                        top: document.body.scrollHeight,
+                        behavior: 'smooth'
+                    });
+                }
+            }
+        });
+
+        // Update time display
+        function updateTime() {
+            if (currentStep >= 12) {
+                const timeElements = document.querySelectorAll('.terminal-line');
+                if (timeElements.length > 12) {
+                    timeElements[12].textContent = "> SYSTEM TIME: " + new Date().toLocaleTimeString();
+                }
+            }
+        }
+        setInterval(updateTime, 1000);
+
+        // Security measures
+        document.addEventListener('copy', function(e) {
+            e.preventDefault();
+            return false;
+        });
+
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        // Initialize terminal
+        initTerminal();
     </script>
 </body>
 </html>
