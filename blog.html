@@ -109,6 +109,22 @@
             opacity: 1;
             text-shadow: 0 0 8px #00b4ff;
         }
+        /* Smooth scrolling for mobile */
+.blog-container {
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Better post spacing on mobile */
+@media (max-width: 768px) {
+    .blog-post {
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+    }
+    
+    .scripture {
+        font-size: 0.9em;
+    }
+}
     </style>
 </head>
 <body>
