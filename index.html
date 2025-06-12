@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>INTERNET MONARCH</title>
     <style>
         html, body {
@@ -155,6 +156,45 @@
             opacity: 1;
             text-shadow: 0 0 8px #00b4ff;
         }
+        /* Mobile-specific styles */
+@media (max-width: 768px) {
+    .title {
+        font-size: 1.8rem;
+        margin-top: 20px;
+    }
+    
+    .header {
+        padding: 15px;
+    }
+    
+    .terminal-line, .blog-post {
+        padding-left: 10px;
+        font-size: 14px;
+        white-space: pre-wrap; /* Allow text wrapping */
+        word-break: break-word;
+    }
+    
+    /* Adjust terminal cursor for mobile */
+    .cursor {
+        height: 16px;
+        width: 8px;
+    }
+    
+    /* Larger tap targets */
+    .blog-button, .home-button {
+        padding: 8px 12px;
+        font-size: 1.1rem;
+    }
+    
+    /* Blog page specific */
+    .blog-container {
+        padding: 10px;
+    }
+    
+    .blog-title {
+        font-size: 1.2rem;
+    }
+}
     </style>
 </head>
 <body>
@@ -208,37 +248,62 @@
         const continuePrompt = document.getElementById('continue-prompt');
         let sequenceStarted = false;
 
-        // Handle Enter key press
-        function handleKeyPress(e) {
-            if (e.key === 'Enter') {
-                if (!sequenceStarted) {
-                    // Remove initial prompt
-                    document.querySelector('.enter-prompt').style.display = 'none';
-                    sequenceStarted = true;
-                    continuePrompt.style.display = 'block';
-                }
-                
-                if (currentStep < loginSteps.length) {
-                    // Add next login step
-                    const newLine = document.createElement('div');
-                    newLine.className = 'terminal-line';
-                    newLine.textContent = loginSteps[currentStep];
-                    loginContainer.appendChild(newLine);
-                    
-                    // Scroll to bottom
-                    window.scrollTo(0, document.body.scrollHeight);
-                    
-                    currentStep++;
-                    
-                    // Show input prompt after last step
-                    if (currentStep === loginSteps.length) {
-                        continuePrompt.style.display = 'none';
-                        inputContainer.style.display = 'flex';
-                        commandInput.textContent = ' _';
-                    }
-                }
+// Replace the Enter key handler with this:
+function initTerminal() {
+    const tapArea = document.createElement('div');
+    tapArea.style.position = 'fixed';
+    tapArea.style.bottom = '0';
+    tapArea.style.left = '0';
+    tapArea.style.right = '0';
+    tapArea.style.height = '80px';
+    tapArea.style.background = 'transparent';
+    tapArea.style.zIndex = '1000';
+    tapArea.innerHTML = `
+        <div style="text-align: center; color: #00b4ff; margin-bottom: 10px;">
+            Tap to continue
+        </div>
+    `;
+    document.body.appendChild(tapArea);
+
+    let currentStep = 0;
+    const loginContainer = document.getElementById('login-sequence');
+    const inputContainer = document.getElementById('input-container');
+    const continuePrompt = document.getElementById('continue-prompt');
+
+    tapArea.addEventListener('click', () => {
+        if (!sequenceStarted) {
+            document.querySelector('.enter-prompt').style.display = 'none';
+            sequenceStarted = true;
+            continuePrompt.style.display = 'block';
+            tapArea.innerHTML = `<div style="text-align: center; color: #ff00aa; margin-bottom: 10px;">
+                Tap to continue
+            </div>`;
+        }
+        
+        if (currentStep < loginSteps.length) {
+            const newLine = document.createElement('div');
+            newLine.className = 'terminal-line';
+            newLine.textContent = loginSteps[currentStep];
+            loginContainer.appendChild(newLine);
+            
+            window.scrollTo({
+                top: document.body.scrollHeight,
+                behavior: 'smooth'
+            });
+            
+            currentStep++;
+            
+            if (currentStep === loginSteps.length) {
+                continuePrompt.style.display = 'none';
+                inputContainer.style.display = 'flex';
+                tapArea.style.display = 'none';
             }
         }
+    });
+}
+
+// Initialize when DOM loads
+document.addEventListener('DOMContentLoaded', initTerminal);
 
         // Initialize
         document.addEventListener('keydown', handleKeyPress);
