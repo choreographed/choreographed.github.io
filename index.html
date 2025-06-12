@@ -110,15 +110,10 @@
             0%, 100% { opacity: 0.7; }
             50% { opacity: 1; }
         }
-        /* NEW BLOG BUTTON STYLES */
-        .nav-buttons {
+        .nav-button {
             position: absolute;
             top: 20px;
             right: 20px;
-            display: flex;
-            gap: 15px;
-        }
-        .nav-button {
             color: #00b4ff;
             font-family: 'Courier New', monospace;
             text-decoration: none;
@@ -135,29 +130,13 @@
             opacity: 1;
             text-shadow: 0 0 8px #00b4ff;
         }
-.nav-button {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    color: #00b4ff;
-    font-family: 'Courier New', monospace;
-    text-decoration: none;
-    text-shadow: 0 0 5px #0066ff;
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 1rem;
-    padding: 5px;
-    opacity: 0.8;
-    transition: all 0.3s;
-}
-
-.nav-button:hover {
-    opacity: 1;
-    text-shadow: 0 0 8px #00b4ff;
-}
         .command-history {
             padding-left: 20px;
+        }
+        #hidden-input {
+            position: fixed;
+            opacity: 0;
+            pointer-events: none;
         }
     </style>
 </head>
@@ -165,10 +144,7 @@
     <div class="header">
         <h1 class="title">INTERNET MONARCH</h1>
         <p class="quote">"Maybe we're even more screwed up than he was but in socially acceptable ways."</p>
-        <!-- NEW NAVIGATION BUTTONS -->
-        <div class="nav-buttons">
-    <a href="blog.html" class="nav-button">[BLOG]</a>
-        </div>
+        <a href="blog.html" class="nav-button">[BLOG]</a>
     </div>
 
     <div class="terminal-container">
@@ -180,10 +156,13 @@
         <div id="continue-prompt" class="continue-prompt" style="display: none;">Press ENTER to continue...</div>
         <div class="input-line" id="input-container" style="display: none;">
             <span class="prompt">></span>
-            <span id="command-input" contenteditable="true"></span>
+            <span id="command-display"></span>
             <span class="cursor"></span>
         </div>
     </div>
+
+    <!-- Hidden input that's always active -->
+    <input type="text" id="hidden-input" autocomplete="off" spellcheck="false">
 
     <script>
         // Login sequence steps
@@ -217,14 +196,19 @@
         let currentStep = 0;
         const loginContainer = document.getElementById('login-sequence');
         const inputContainer = document.getElementById('input-container');
-        const commandInput = document.getElementById('command-input');
+        const commandDisplay = document.getElementById('command-display');
         const continuePrompt = document.getElementById('continue-prompt');
         const commandHistory = document.getElementById('command-history');
+        const hiddenInput = document.getElementById('hidden-input');
         let sequenceStarted = false;
         let inputEnabled = false;
+        let currentInput = '';
 
-        // Handle Enter key press
-        function handleKeyPress(e) {
+        // Focus the hidden input immediately
+        hiddenInput.focus();
+
+        // Handle all keyboard input
+        hiddenInput.addEventListener('keydown', function(e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
                 
@@ -233,6 +217,7 @@
                     document.querySelector('.enter-prompt').style.display = 'none';
                     sequenceStarted = true;
                     continuePrompt.style.display = 'block';
+                    return;
                 }
                 
                 if (currentStep < loginSteps.length && !inputEnabled) {
@@ -251,12 +236,11 @@
                     if (currentStep === loginSteps.length) {
                         continuePrompt.style.display = 'none';
                         inputContainer.style.display = 'flex';
-                        commandInput.focus();
                         inputEnabled = true;
                     }
                 } else if (inputEnabled) {
                     // Process command
-                    const command = commandInput.textContent.trim().toLowerCase();
+                    const command = currentInput.trim().toLowerCase();
                     
                     // Add command to history
                     const commandLine = document.createElement('div');
@@ -268,13 +252,28 @@
                     processCommand(command);
                     
                     // Clear input
-                    commandInput.textContent = '';
+                    currentInput = '';
+                    commandDisplay.textContent = '';
+                    hiddenInput.value = '';
                     
                     // Scroll to bottom
                     window.scrollTo(0, document.body.scrollHeight);
                 }
+            } else if (inputEnabled && e.key.length === 1) {
+                // Regular character input
+                currentInput += e.key;
+                commandDisplay.textContent = currentInput;
+            } else if (inputEnabled && e.key === 'Backspace') {
+                // Handle backspace
+                currentInput = currentInput.slice(0, -1);
+                commandDisplay.textContent = currentInput;
             }
-        }
+        });
+
+        // Keep focus on hidden input even when clicking elsewhere
+        document.addEventListener('click', function() {
+            hiddenInput.focus();
+        });
 
         // Process user commands
         function processCommand(command) {
@@ -317,9 +316,6 @@
             }
         }
 
-        // Initialize
-        document.addEventListener('keydown', handleKeyPress);
-        
         // Update time in the displayed time step
         function updateTime() {
             if (currentStep >= 12) { // Time is step 12 in the array
