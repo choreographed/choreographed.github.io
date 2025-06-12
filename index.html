@@ -11,7 +11,6 @@
             height: 100%;
             margin: 0;
             padding: 0;
-            background-color: #000000;
         }
         body {
             background-color: #000000;
@@ -90,7 +89,6 @@
         .input-line {
             display: flex;
             align-items: center;
-            margin-top: 10px;
         }
         .prompt {
             color: #00ff00;
@@ -113,6 +111,51 @@
             0%, 100% { opacity: 0.7; }
             50% { opacity: 1; }
         }
+        /* NEW BLOG BUTTON STYLES */
+        .nav-buttons {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 15px;
+        }
+        .nav-button {
+            color: #00b4ff;
+            font-family: 'Courier New', monospace;
+            text-decoration: none;
+            text-shadow: 0 0 5px #0066ff;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 5px;
+            opacity: 0.8;
+            transition: all 0.3s;
+        }
+        .nav-button:hover {
+            opacity: 1;
+            text-shadow: 0 0 8px #00b4ff;
+        }
+        .blog-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: #00b4ff;
+            font-family: 'Courier New', monospace;
+            text-decoration: none;
+            text-shadow: 0 0 5px #0066ff;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 5px;
+            opacity: 0.8;
+            transition: all 0.3s;
+        }
+        .blog-button:hover {
+            opacity: 1;
+            text-shadow: 0 0 8px #00b4ff;
+        }
         /* Command input styling */
         #command-input {
             background: transparent;
@@ -122,7 +165,6 @@
             outline: none;
             width: 80%;
             flex-grow: 1;
-            font-size: inherit;
         }
         /* Mobile-specific styles */
         @media (max-width: 768px) {
@@ -130,44 +172,43 @@
                 font-size: 1.8rem;
                 margin-top: 20px;
             }
+            
             .header {
                 padding: 15px;
             }
-            .terminal-line {
+            
+            .terminal-line, .blog-post {
                 padding-left: 10px;
                 font-size: 14px;
-                white-space: pre-wrap;
+                white-space: pre-wrap; /* Allow text wrapping */
                 word-break: break-word;
             }
+            
+            /* Adjust terminal cursor for mobile */
             .cursor {
                 height: 16px;
                 width: 8px;
             }
+            
+            /* Larger tap targets */
+            .blog-button, .home-button {
+                padding: 8px 12px;
+                font-size: 1.1rem;
+            }
+            
+            /* Blog page specific */
+            .blog-container {
+                padding: 10px;
+            }
+            
+            .blog-title {
+                font-size: 1.2rem;
+            }
+
+            /* Command input on mobile */
             #command-input {
                 width: 70%;
-            }
-            /* Hide enter prompt on mobile */
-            .enter-prompt, .continue-prompt {
-                display: none !important;
-            }
-        }
-        /* Mobile input form */
-        .mobile-input-form {
-            display: none;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: rgba(0, 0, 0, 0.9);
-            padding: 10px;
-            border-top: 1px solid #00b4ff;
-        }
-        @media (max-width: 768px) {
-            .mobile-input-form {
-                display: block;
-            }
-            #input-container {
-                display: none !important;
+                font-size: 14px;
             }
         }
     </style>
@@ -176,8 +217,9 @@
     <div class="header">
         <h1 class="title">INTERNET MONARCH</h1>
         <p class="quote">"Maybe we're even more screwed up than he was but in socially acceptable ways."</p>
+        <!-- NEW NAVIGATION BUTTONS -->
         <div class="nav-buttons">
-            <a href="blog.html" class="blog-button">[BLOG]</a>
+        <a href="blog.html" class="blog-button">[BLOG]</a>
         </div>
     </div>
 
@@ -193,30 +235,6 @@
             <span class="cursor" id="input-cursor"></span>
         </div>
     </div>
-
-    <!-- Mobile input form (hidden on desktop) -->
-    <form class="mobile-input-form" id="mobileInputForm">
-        <div style="display: flex; align-items: center;">
-            <span class="prompt">></span>
-            <input type="text" id="mobile-command-input" autocomplete="off" style="
-                background: transparent;
-                border: none;
-                color: #00b4ff;
-                font-family: 'Courier New', monospace;
-                outline: none;
-                flex-grow: 1;
-                font-size: 14px;
-            ">
-            <button type="submit" style="
-                background: transparent;
-                border: 1px solid #00b4ff;
-                color: #00b4ff;
-                font-family: 'Courier New', monospace;
-                padding: 5px 10px;
-                margin-left: 10px;
-            ">DONE</button>
-        </div>
-    </form>
 
     <script>
         // Login sequence steps
@@ -245,76 +263,81 @@
         const commandInput = document.getElementById('command-input');
         const continuePrompt = document.getElementById('continue-prompt');
         const inputCursor = document.getElementById('input-cursor');
-        const mobileInputForm = document.getElementById('mobileInputForm');
-        const mobileCommandInput = document.getElementById('mobile-command-input');
         let sequenceStarted = false;
 
-        // Detect mobile device
-        function isMobileDevice() {
-            return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
-        }
-
-        // Initialize terminal based on device type
+        // Replace the Enter key handler with this:
         function initTerminal() {
-            if (isMobileDevice()) {
-                // Mobile setup
-                document.addEventListener('DOMContentLoaded', startMobileSequence);
-                mobileInputForm.addEventListener('submit', handleMobileCommand);
-            } else {
-                // Desktop setup
-                document.addEventListener('keydown', handleKeyPress);
-            }
-        }
+            const tapArea = document.createElement('div');
+            tapArea.style.position = 'fixed';
+            tapArea.style.bottom = '0';
+            tapArea.style.left = '0';
+            tapArea.style.right = '0';
+            tapArea.style.height = '80px';
+            tapArea.style.background = 'transparent';
+            tapArea.style.zIndex = '1000';
+            tapArea.innerHTML = `
+                <div style="text-align: center; color: #00b4ff; margin-bottom: 10px;">
+                    Tap to continue
+                </div>
+            `;
+            document.body.appendChild(tapArea);
 
-        // Start sequence on mobile (immediately since we're tapping DONE)
-        function startMobileSequence() {
-            if (!sequenceStarted) {
-                sequenceStarted = true;
-                advanceSequence();
-            }
-        }
-
-        // Handle desktop key presses
-        function handleKeyPress(e) {
-            if (e.key === 'Enter') {
+            tapArea.addEventListener('click', () => {
                 if (!sequenceStarted) {
                     document.querySelector('.enter-prompt').style.display = 'none';
                     sequenceStarted = true;
                     continuePrompt.style.display = 'block';
-                } else if (currentStep < loginSteps.length) {
-                    advanceSequence();
+                    tapArea.innerHTML = `<div style="text-align: center; color: #ff00aa; margin-bottom: 10px;">
+                        Tap to continue
+                    </div>`;
                 }
-            }
+                
+                if (currentStep < loginSteps.length) {
+                    const newLine = document.createElement('div');
+                    newLine.className = 'terminal-line';
+                    newLine.textContent = loginSteps[currentStep];
+                    loginContainer.appendChild(newLine);
+                    
+                    window.scrollTo({
+                        top: document.body.scrollHeight,
+                        behavior: 'smooth'
+                    });
+                    
+                    currentStep++;
+                    
+                    if (currentStep === loginSteps.length) {
+                        continuePrompt.style.display = 'none';
+                        inputContainer.style.display = 'flex';
+                        tapArea.style.display = 'none';
+                        commandInput.focus();
+                    }
+                }
+            });
         }
 
-        // Advance the terminal sequence
-        function advanceSequence() {
-            if (currentStep < loginSteps.length) {
-                const newLine = document.createElement('div');
-                newLine.className = 'terminal-line';
-                newLine.textContent = loginSteps[currentStep];
-                loginContainer.appendChild(newLine);
+        // Command handling
+        commandInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                const command = commandInput.value.trim();
+                commandInput.value = '';
                 
+                // Add the command to the terminal
+                const commandLine = document.createElement('div');
+                commandLine.className = 'terminal-line';
+                commandLine.innerHTML = `<span class="prompt">></span> ${command}`;
+                loginContainer.appendChild(commandLine);
+                
+                // Process command
+                processCommand(command);
+                
+                // Scroll to bottom
                 window.scrollTo({
                     top: document.body.scrollHeight,
                     behavior: 'smooth'
                 });
-                
-                currentStep++;
-                
-                if (currentStep === loginSteps.length) {
-                    continuePrompt.style.display = 'none';
-                    if (isMobileDevice()) {
-                        mobileCommandInput.focus();
-                    } else {
-                        inputContainer.style.display = 'flex';
-                        commandInput.focus();
-                    }
-                }
             }
-        }
+        });
 
-        // Process commands (both desktop and mobile)
         function processCommand(command) {
             const responseLine = document.createElement('div');
             responseLine.className = 'terminal-line';
@@ -325,7 +348,7 @@
                     break;
                 case 'clear':
                     loginContainer.innerHTML = '';
-                    return;
+                    return; // Don't add a response line for clear
                 case 'blog':
                     responseLine.textContent = "> Opening blog...";
                     loginContainer.appendChild(responseLine);
@@ -341,62 +364,14 @@
             }
             
             loginContainer.appendChild(responseLine);
-            window.scrollTo({
-                top: document.body.scrollHeight,
-                behavior: 'smooth'
-            });
         }
 
-        // Handle mobile command submission
-        function handleMobileCommand(e) {
-            e.preventDefault();
-            const command = mobileCommandInput.value.trim();
-            if (command) {
-                // Add command to terminal
-                const commandLine = document.createElement('div');
-                commandLine.className = 'terminal-line';
-                commandLine.innerHTML = `<span class="prompt">></span> ${command}`;
-                loginContainer.appendChild(commandLine);
-                
-                // Process command
-                processCommand(command);
-                
-                // Clear input
-                mobileCommandInput.value = '';
-                
-                // Scroll to bottom
-                window.scrollTo({
-                    top: document.body.scrollHeight,
-                    behavior: 'smooth'
-                });
-            }
-        }
+        // Initialize when DOM loads
+        document.addEventListener('DOMContentLoaded', initTerminal);
 
-        // Handle desktop command input
-        commandInput.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                const command = commandInput.value.trim();
-                commandInput.value = '';
-                
-                if (command) {
-                    const commandLine = document.createElement('div');
-                    commandLine.className = 'terminal-line';
-                    commandLine.innerHTML = `<span class="prompt">></span> ${command}`;
-                    loginContainer.appendChild(commandLine);
-                    
-                    processCommand(command);
-                    
-                    window.scrollTo({
-                        top: document.body.scrollHeight,
-                        behavior: 'smooth'
-                    });
-                }
-            }
-        });
-
-        // Update time display
+        // Update time in the displayed time step
         function updateTime() {
-            if (currentStep >= 12) {
+            if (currentStep >= 12) { // Time is step 12 in the array
                 const timeElements = document.querySelectorAll('.terminal-line');
                 if (timeElements.length > 12) {
                     timeElements[12].textContent = "> SYSTEM TIME: " + new Date().toLocaleTimeString();
@@ -414,9 +389,6 @@
         document.addEventListener('contextmenu', function(e) {
             e.preventDefault();
         });
-
-        // Initialize terminal
-        initTerminal();
     </script>
 </body>
 </html>
