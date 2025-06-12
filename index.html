@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>INTERNET MONARCH</title>
     <style>
         html, body {
@@ -156,60 +155,8 @@
             opacity: 1;
             text-shadow: 0 0 8px #00b4ff;
         }
-        /* Command input styling */
-        #command-input {
-            background: transparent;
-            border: none;
-            color: #00b4ff;
-            font-family: 'Courier New', monospace;
-            outline: none;
-            width: 80%;
-            flex-grow: 1;
-        }
-        /* Mobile-specific styles */
-        @media (max-width: 768px) {
-            .title {
-                font-size: 1.8rem;
-                margin-top: 20px;
-            }
-            
-            .header {
-                padding: 15px;
-            }
-            
-            .terminal-line, .blog-post {
-                padding-left: 10px;
-                font-size: 14px;
-                white-space: pre-wrap; /* Allow text wrapping */
-                word-break: break-word;
-            }
-            
-            /* Adjust terminal cursor for mobile */
-            .cursor {
-                height: 16px;
-                width: 8px;
-            }
-            
-            /* Larger tap targets */
-            .blog-button, .home-button {
-                padding: 8px 12px;
-                font-size: 1.1rem;
-            }
-            
-            /* Blog page specific */
-            .blog-container {
-                padding: 10px;
-            }
-            
-            .blog-title {
-                font-size: 1.2rem;
-            }
-
-            /* Command input on mobile */
-            #command-input {
-                width: 70%;
-                font-size: 14px;
-            }
+        .command-history {
+            padding-left: 20px;
         }
     </style>
 </head>
@@ -228,11 +175,12 @@
         <div class="terminal-line" style="animation-delay: 0.2s">----------------------------</div>
         <div class="terminal-line enter-prompt" style="animation-delay: 0.4s">[ Press ENTER to begin ]</div>
         <div id="login-sequence"></div>
+        <div id="command-history" class="command-history"></div>
         <div id="continue-prompt" class="continue-prompt" style="display: none;">Press ENTER to continue...</div>
         <div class="input-line" id="input-container" style="display: none;">
             <span class="prompt">></span>
-            <input type="text" id="command-input" autocomplete="off">
-            <span class="cursor" id="input-cursor"></span>
+            <span id="command-input" contenteditable="true"></span>
+            <span class="cursor"></span>
         </div>
     </div>
 
@@ -254,7 +202,15 @@
             "> APE STATUS: Not active.",
             "> APE HEALTH: Good.",
             "",
-            "> THE INTERNET MONARCH"
+            "> THE INTERNET MONARCH",
+            "",
+            "Available commands:",
+            "------------------",
+            "blog - Open the blog page",
+            "help - Show available commands",
+            "clear - Clear the terminal",
+            "",
+            "Type a command and press ENTER"
         ];
 
         let currentStep = 0;
@@ -262,113 +218,107 @@
         const inputContainer = document.getElementById('input-container');
         const commandInput = document.getElementById('command-input');
         const continuePrompt = document.getElementById('continue-prompt');
-        const inputCursor = document.getElementById('input-cursor');
+        const commandHistory = document.getElementById('command-history');
         let sequenceStarted = false;
+        let inputEnabled = false;
 
-        // Replace the Enter key handler with this:
-        function initTerminal() {
-            const tapArea = document.createElement('div');
-            tapArea.style.position = 'fixed';
-            tapArea.style.bottom = '0';
-            tapArea.style.left = '0';
-            tapArea.style.right = '0';
-            tapArea.style.height = '80px';
-            tapArea.style.background = 'transparent';
-            tapArea.style.zIndex = '1000';
-            tapArea.innerHTML = `
-                <div style="text-align: center; color: #00b4ff; margin-bottom: 10px;">
-                    Tap to continue
-                </div>
-            `;
-            document.body.appendChild(tapArea);
-
-            tapArea.addEventListener('click', () => {
+        // Handle Enter key press
+        function handleKeyPress(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                
                 if (!sequenceStarted) {
+                    // Remove initial prompt
                     document.querySelector('.enter-prompt').style.display = 'none';
                     sequenceStarted = true;
                     continuePrompt.style.display = 'block';
-                    tapArea.innerHTML = `<div style="text-align: center; color: #ff00aa; margin-bottom: 10px;">
-                        Tap to continue
-                    </div>`;
                 }
                 
-                if (currentStep < loginSteps.length) {
+                if (currentStep < loginSteps.length && !inputEnabled) {
+                    // Add next login step
                     const newLine = document.createElement('div');
                     newLine.className = 'terminal-line';
                     newLine.textContent = loginSteps[currentStep];
                     loginContainer.appendChild(newLine);
                     
-                    window.scrollTo({
-                        top: document.body.scrollHeight,
-                        behavior: 'smooth'
-                    });
+                    // Scroll to bottom
+                    window.scrollTo(0, document.body.scrollHeight);
                     
                     currentStep++;
                     
+                    // Show input prompt after last step
                     if (currentStep === loginSteps.length) {
                         continuePrompt.style.display = 'none';
                         inputContainer.style.display = 'flex';
-                        tapArea.style.display = 'none';
                         commandInput.focus();
+                        inputEnabled = true;
                     }
+                } else if (inputEnabled) {
+                    // Process command
+                    const command = commandInput.textContent.trim().toLowerCase();
+                    
+                    // Add command to history
+                    const commandLine = document.createElement('div');
+                    commandLine.className = 'terminal-line';
+                    commandLine.textContent = '> ' + command;
+                    commandHistory.appendChild(commandLine);
+                    
+                    // Process the command
+                    processCommand(command);
+                    
+                    // Clear input
+                    commandInput.textContent = '';
+                    
+                    // Scroll to bottom
+                    window.scrollTo(0, document.body.scrollHeight);
                 }
-            });
+            }
         }
 
-        // Command handling
-        commandInput.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                const command = commandInput.value.trim();
-                commandInput.value = '';
-                
-                // Add the command to the terminal
-                const commandLine = document.createElement('div');
-                commandLine.className = 'terminal-line';
-                commandLine.innerHTML = `<span class="prompt">></span> ${command}`;
-                loginContainer.appendChild(commandLine);
-                
-                // Process command
-                processCommand(command);
-                
-                // Scroll to bottom
-                window.scrollTo({
-                    top: document.body.scrollHeight,
-                    behavior: 'smooth'
-                });
-            }
-        });
-
+        // Process user commands
         function processCommand(command) {
-            const responseLine = document.createElement('div');
-            responseLine.className = 'terminal-line';
-            
-            switch(command.toLowerCase()) {
+            switch(command) {
+                case 'blog':
+                    // Redirect to blog page
+                    window.location.href = 'blog.html';
+                    break;
                 case 'help':
-                    responseLine.textContent = "> Available commands: help, clear, blog, about";
+                    // Show help message
+                    const helpLines = [
+                        "",
+                        "Available commands:",
+                        "------------------",
+                        "blog - Open the blog page",
+                        "help - Show this help message",
+                        "clear - Clear the terminal",
+                        ""
+                    ];
+                    
+                    helpLines.forEach(line => {
+                        const newLine = document.createElement('div');
+                        newLine.className = 'terminal-line';
+                        newLine.textContent = line;
+                        commandHistory.appendChild(newLine);
+                    });
                     break;
                 case 'clear':
+                    // Clear terminal
                     loginContainer.innerHTML = '';
-                    return; // Don't add a response line for clear
-                case 'blog':
-                    responseLine.textContent = "> Opening blog...";
-                    loginContainer.appendChild(responseLine);
-                    setTimeout(() => {
-                        window.location.href = 'blog.html';
-                    }, 500);
-                    return;
-                case 'about':
-                    responseLine.textContent = "> INTERNET MONARCH v1.5 - A digital consciousness";
+                    commandHistory.innerHTML = '';
                     break;
                 default:
-                    responseLine.textContent = `> Unknown command: ${command}. Type 'help' for available commands.`;
+                    // Unknown command
+                    const errorLine = document.createElement('div');
+                    errorLine.className = 'terminal-line';
+                    errorLine.textContent = `Unknown command: "${command}". Type "help" for available commands.`;
+                    commandHistory.appendChild(errorLine);
+                    break;
             }
-            
-            loginContainer.appendChild(responseLine);
         }
 
-        // Initialize when DOM loads
-        document.addEventListener('DOMContentLoaded', initTerminal);
-
+        // Initialize
+        document.addEventListener('keydown', handleKeyPress);
+        
         // Update time in the displayed time step
         function updateTime() {
             if (currentStep >= 12) { // Time is step 12 in the array
