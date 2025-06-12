@@ -291,6 +291,7 @@
                         "blog - Open the blog page",
                         "help - Show this help message",
                         "clear - Clear the terminal",
+                        "about - Show system information",
                         ""
                     ];
                     
@@ -305,6 +306,28 @@
                     // Clear terminal
                     loginContainer.innerHTML = '';
                     commandHistory.innerHTML = '';
+                    break;
+                case 'about':
+                    // Show about information
+                    const aboutLines = [
+                        "",
+                        "INTERNET MONARCH v1.5 - A DIGITAL DAYDREAM",
+                        "-----------------------------------------",
+                        "> A cybernetic dreamscape",
+                        "> Where reality glitches",
+                        "> And code becomes poetry",
+                        "",
+                        "> Built with broken keyboards",
+                        "> And too much caffeine",
+                        ""
+                    ];
+                    
+                    aboutLines.forEach(line => {
+                        const newLine = document.createElement('div');
+                        newLine.className = 'terminal-line';
+                        newLine.textContent = line;
+                        commandHistory.appendChild(newLine);
+                    });
                     break;
                 default:
                     // Unknown command
