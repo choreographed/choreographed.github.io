@@ -157,17 +157,7 @@
                 .command-history {
             padding-left: 20px;
         }
-        #hidden-input {
-    position: fixed;
-    opacity: 0;
-    pointer-events: none;
-    width: 0;
-    height: 0;
-    border: none;
-    outline: none;
-    padding: 0;
-    margin: 0;
-}
+
     </style>
 </head>
 <body>
@@ -194,204 +184,192 @@
         </div>
     </div>
 
-    <!-- Hidden input that's always active -->
-    <input type="text" id="hidden-input" autocomplete="off" spellcheck="false">
 
-    <script>
-        // Login sequence steps
-        const loginSteps = [
-            "> Have you ever read the obituaries of lost addicts?",
-            "> They are the biggest bunch of bullshit that I've ever heard.",
-            "",
-            "> They read something like...",
-            "> 'Johnny excelled at turning our lives as a family upside down.'",
-            "> 'At the end of the day we wish he would have made it out the other side.'",
-            "",
-            "> 'But maybe we're even more screwed up than he was, just in socially acceptable ways.'",
-            "",
-            "WELCOME, OPERATOR",
-            "----------------",
-            "> SYSTEM TIME: " + new Date().toLocaleTimeString(),
-            "> APE STATUS: Not active.",
-            "> APE HEALTH: Good.",
-            "",
-            "> THE INTERNET MONARCH",
-            "",
-            "Available commands:",
-            "------------------",
-            "blog - Open the blog page",
-            "help - Show available commands",
-            "clear - Clear the terminal",
-            "",
-            "Type a command and press ENTER"
-        ];
+<script>
+    // Login sequence steps
+    const loginSteps = [
+        "> Have you ever read the obituaries of lost addicts?",
+        "> They are the biggest bunch of bullshit that I've ever heard.",
+        "",
+        "> They read something like...",
+        "> 'Johnny excelled at turning our lives as a family upside down.'",
+        "> 'At the end of the day we wish he would have made it out the other side.'",
+        "",
+        "> 'But maybe we're even more screwed up than he was, just in socially acceptable ways.'",
+        "",
+        "WELCOME, OPERATOR",
+        "----------------",
+        "> SYSTEM TIME: " + new Date().toLocaleTimeString(),
+        "> APE STATUS: Not active.",
+        "> APE HEALTH: Good.",
+        "",
+        "> THE INTERNET MONARCH",
+        "",
+        "Available commands:",
+        "------------------",
+        "blog - Open the blog page",
+        "help - Show available commands",
+        "clear - Clear the terminal",
+        "",
+        "Type a command and press ENTER"
+    ];
 
-        let currentStep = 0;
-        const loginContainer = document.getElementById('login-sequence');
-        const inputContainer = document.getElementById('input-container');
-        const commandDisplay = document.getElementById('command-display');
-        const continuePrompt = document.getElementById('continue-prompt');
-        const commandHistory = document.getElementById('command-history');
-        const hiddenInput = document.getElementById('hidden-input');
-        let sequenceStarted = false;
-        let inputEnabled = false;
-        let currentInput = '';
+    let currentStep = 0;
+    const loginContainer = document.getElementById('login-sequence');
+    const inputContainer = document.getElementById('input-container');
+    const commandDisplay = document.getElementById('command-display');
+    const continuePrompt = document.getElementById('continue-prompt');
+    const commandHistory = document.getElementById('command-history');
+    let sequenceStarted = false;
+    let inputEnabled = false;
+    let currentInput = '';
 
-        // Focus the hidden input immediately
-        hiddenInput.focus();
-
-        // Handle all keyboard input
-        hiddenInput.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
+    // keyboard event listener
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            
+            if (!sequenceStarted) {
+                // Remove initial prompt
+                document.querySelector('.enter-prompt').style.display = 'none';
+                sequenceStarted = true;
+                continuePrompt.style.display = 'block';
+                return;
+            }
+            
+            if (currentStep < loginSteps.length && !inputEnabled) {
+                // Add next login step
+                const newLine = document.createElement('div');
+                newLine.className = 'terminal-line';
+                newLine.textContent = loginSteps[currentStep];
+                loginContainer.appendChild(newLine);
                 
-                if (!sequenceStarted) {
-                    // Remove initial prompt
-                    document.querySelector('.enter-prompt').style.display = 'none';
-                    sequenceStarted = true;
-                    continuePrompt.style.display = 'block';
-                    return;
+                // Scroll to bottom
+                window.scrollTo(0, document.body.scrollHeight);
+                
+                currentStep++;
+                
+                // Show input prompt after last step
+                if (currentStep === loginSteps.length) {
+                    continuePrompt.style.display = 'none';
+                    inputContainer.style.display = 'flex';
+                    inputEnabled = true;
                 }
+            } else if (inputEnabled) {
+                // Process command
+                const command = currentInput.trim().toLowerCase();
                 
-                if (currentStep < loginSteps.length && !inputEnabled) {
-                    // Add next login step
+                // Add command to history
+                const commandLine = document.createElement('div');
+                commandLine.className = 'terminal-line';
+                commandLine.textContent = '> ' + command;
+                commandHistory.appendChild(commandLine);
+                
+                // Process the command
+                processCommand(command);
+                
+                // Clear input
+                currentInput = '';
+                commandDisplay.textContent = '';
+                
+                // Scroll to bottom
+                window.scrollTo(0, document.body.scrollHeight);
+            }
+        } else if (inputEnabled && e.key.length === 1) {
+            // Regular character input
+            currentInput += e.key;
+            commandDisplay.textContent = currentInput;
+        } else if (inputEnabled && e.key === 'Backspace') {
+            // Handle backspace
+            currentInput = currentInput.slice(0, -1);
+            commandDisplay.textContent = currentInput;
+        }
+    });
+
+    // Keep focus on the terminal
+    document.addEventListener('click', function() {
+        window.scrollTo(0, document.body.scrollHeight);
+    });
+
+    // Process user 
+    function processCommand(command) {
+        switch(command) {
+            case 'blog':
+                window.location.href = 'blog.html';
+                break;
+            case 'help':
+                const helpLines = [
+                    "",
+                    "Available commands:",
+                    "------------------",
+                    "blog - Open the blog page",
+                    "help - Show this help message",
+                    "clear - Clear the terminal",
+                    "about - Show system information",
+                    ""
+                ];
+                
+                helpLines.forEach(line => {
                     const newLine = document.createElement('div');
                     newLine.className = 'terminal-line';
-                    newLine.textContent = loginSteps[currentStep];
-                    loginContainer.appendChild(newLine);
-                    
-                    // Scroll to bottom
-                    window.scrollTo(0, document.body.scrollHeight);
-                    
-                    currentStep++;
-                    
-                    // Show input prompt after last step
-                    if (currentStep === loginSteps.length) {
-                        continuePrompt.style.display = 'none';
-                        inputContainer.style.display = 'flex';
-                        inputEnabled = true;
-                    }
-                } else if (inputEnabled) {
-                    // Process command
-                    const command = currentInput.trim().toLowerCase();
-                    
-                    // Add command to history
-                    const commandLine = document.createElement('div');
-                    commandLine.className = 'terminal-line';
-                    commandLine.textContent = '> ' + command;
-                    commandHistory.appendChild(commandLine);
-                    
-                    // Process the command
-                    processCommand(command);
-                    
-                    // Clear input
-                    currentInput = '';
-                    commandDisplay.textContent = '';
-                    hiddenInput.value = '';
-                    
-                    // Scroll to bottom
-                    window.scrollTo(0, document.body.scrollHeight);
-                }
-            } else if (inputEnabled && e.key.length === 1) {
-                // Regular character input
-                currentInput += e.key;
-                commandDisplay.textContent = currentInput;
-            } else if (inputEnabled && e.key === 'Backspace') {
-                // Handle backspace
-                currentInput = currentInput.slice(0, -1);
-                commandDisplay.textContent = currentInput;
-            }
-        });
+                    newLine.textContent = line;
+                    commandHistory.appendChild(newLine);
+                });
+                break;
+            case 'clear':
+                loginContainer.innerHTML = '';
+                commandHistory.innerHTML = '';
+                break;
+            case 'about':
+                const aboutLines = [
+                    "",
+                    "INTERNET MONARCH v1.5 - A DIGITAL DAYDREAM",
+                    "-----------------------------------------",
+                    "> dreamscape",
+                    "> reality",
+                    "> code",
+                    "",
+                    "> Built with a broken mind",
+                    "> And too much caffeine",
+                    ""
+                ];
+                
+                aboutLines.forEach(line => {
+                    const newLine = document.createElement('div');
+                    newLine.className = 'terminal-line';
+                    newLine.textContent = line;
+                    commandHistory.appendChild(newLine);
+                });
+                break;
+            default:
+                const errorLine = document.createElement('div');
+                errorLine.className = 'terminal-line';
+                errorLine.textContent = `Unknown command: "${command}". Type "help" for available commands.`;
+                commandHistory.appendChild(errorLine);
+                break;
+        }
+    }
 
-        // Keep focus on hidden input even when clicking elsewhere
-        document.addEventListener('click', function() {
-            hiddenInput.focus();
-        });
-
-        // Process user commands
-        function processCommand(command) {
-            switch(command) {
-                case 'blog':
-                    // Redirect to blog page
-                    window.location.href = 'blog.html';
-                    break;
-                case 'help':
-                    // Show help message
-                    const helpLines = [
-                        "",
-                        "Available commands:",
-                        "------------------",
-                        "blog - Open the blog page",
-                        "help - Show this help message",
-                        "clear - Clear the terminal",
-                        "about - Show system information",
-                        ""
-                    ];
-                    
-                    helpLines.forEach(line => {
-                        const newLine = document.createElement('div');
-                        newLine.className = 'terminal-line';
-                        newLine.textContent = line;
-                        commandHistory.appendChild(newLine);
-                    });
-                    break;
-                case 'clear':
-                    // Clear terminal
-                    loginContainer.innerHTML = '';
-                    commandHistory.innerHTML = '';
-                    break;
-                case 'about':
-                    // Show about information
-                    const aboutLines = [
-                        "",
-                        "INTERNET MONARCH v1.5 - A DIGITAL DAYDREAM",
-                        "-----------------------------------------",
-                        "> dreamscape",
-                        "> reality",
-                        "> code",
-                        "",
-                        "> Built with a broken mind",
-                        "> And too much caffeine",
-                        ""
-                    ];
-                    
-                    aboutLines.forEach(line => {
-                        const newLine = document.createElement('div');
-                        newLine.className = 'terminal-line';
-                        newLine.textContent = line;
-                        commandHistory.appendChild(newLine);
-                    });
-                    break;
-                default:
-                    // Unknown command
-                    const errorLine = document.createElement('div');
-                    errorLine.className = 'terminal-line';
-                    errorLine.textContent = `Unknown command: "${command}". Type "help" for available commands.`;
-                    commandHistory.appendChild(errorLine);
-                    break;
+    // Update time in the displayed time step
+    function updateTime() {
+        if (currentStep >= 12) {
+            const timeElements = document.querySelectorAll('.terminal-line');
+            if (timeElements.length > 12) {
+                timeElements[12].textContent = "> SYSTEM TIME: " + new Date().toLocaleTimeString();
             }
         }
+    }
+    setInterval(updateTime, 1000);
 
-        // Update time in the displayed time step
-        function updateTime() {
-            if (currentStep >= 12) { // Time is step 12 in the array
-                const timeElements = document.querySelectorAll('.terminal-line');
-                if (timeElements.length > 12) {
-                    timeElements[12].textContent = "> SYSTEM TIME: " + new Date().toLocaleTimeString();
-                }
-            }
-        }
-        setInterval(updateTime, 1000);
+    // Security measures
+    document.addEventListener('copy', function(e) {
+        e.preventDefault();
+        return false;
+    });
 
-        // Security measures
-        document.addEventListener('copy', function(e) {
-            e.preventDefault();
-            return false;
-        });
-
-        document.addEventListener('contextmenu', function(e) {
-            e.preventDefault();
-        });
-    </script>
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+    });
+</script>
 </body>
 </html>
