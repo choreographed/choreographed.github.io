@@ -110,10 +110,14 @@
             0%, 100% { opacity: 0.7; }
             50% { opacity: 1; }
         }
-        .nav-button {
+  .nav-buttons {
             position: absolute;
             top: 20px;
             right: 20px;
+            display: flex;
+            gap: 15px;
+        }
+        .nav-button {
             color: #00b4ff;
             font-family: 'Courier New', monospace;
             text-decoration: none;
@@ -130,23 +134,10 @@
             opacity: 1;
             text-shadow: 0 0 8px #00b4ff;
         }
-        .command-history {
-            padding-left: 20px;
-        }
-        #hidden-input {
-            position: fixed;
-            opacity: 0;
-            pointer-events: none;
-        }
-        .nav-buttons {
+        .blog-button {
             position: absolute;
             top: 20px;
             right: 20px;
-            display: flex;
-            gap: 30px;
-        }
-
-        .nav-button {
             color: #00b4ff;
             font-family: 'Courier New', monospace;
             text-decoration: none;
@@ -159,8 +150,7 @@
             opacity: 0.8;
             transition: all 0.3s;
         }
-
-        .nav-button:hover {
+        .blog-button:hover {
             opacity: 1;
             text-shadow: 0 0 8px #00b4ff;
         }
