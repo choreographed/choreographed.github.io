@@ -109,21 +109,18 @@
             opacity: 1;
             text-shadow: 0 0 8px #00b4ff;
         }
-        /* Smooth scrolling for mobile */
-.blog-container {
-    -webkit-overflow-scrolling: touch;
-}
-
-/* Better post spacing on mobile */
-@media (max-width: 768px) {
-    .blog-post {
-        margin-bottom: 20px;
-        padding-bottom: 15px;
-    }
-    
-    .scripture {
-        font-size: 0.9em;
-    }
+        .blog-image {
+    max-width: 100%;
+    border: 1px solid #00b4ff;
+    margin: 10px 0;
+    box-shadow: 0 0 10px #0066ff;
+    filter: hue-rotate(180deg) contrast(1.2); /* Optional glitch effect */
+}.blog-video {
+    width: 100%;
+    max-width: 800px; /* Optional: Limit width */
+    border: 1px solid #00b4ff;
+    margin: 15px 0;
+    box-shadow: 0 0 10px #0066ff;
 }
     </style>
 </head>
@@ -132,8 +129,8 @@
         <h1 class="title">INTERNET MONARCH - BLOG</h1>
         <a href="index.html" class="home-button">[HOME]</a>
     </div>
-
-    <div class="blog-container" id="blogContainer">
+        <div class="blog-container" id="blogContainer">
+        <!-- First two sample posts -->
         <div class="blog-post" style="animation-delay: 0.1s">
             <div class="blog-title">ENTRY 001</div>
             <div class="blog-date">03-09-2024</div>
@@ -143,9 +140,24 @@
 > The song and the universe are equal. Thousands of dancers moving in unison, moving like an endless song.
             </div>
         </div>
+
+<div class="blog-post" style="animation-delay: 0.3s">
+    <div class="blog-title">ENTRY 002</div>
+    <div class="blog-date">06-09-2024</div>
+    <div class="blog-content">
+> Something I found online.
+> It fits my mindset well, I think.
+
+<video controls>
+  <source src="media/videos/Nigggaaaa.mp4" type="video/mp4">
+</video>
+
+> Sonder?.
+    </div>
+</div>
         
         <div class="blog-post" style="animation-delay: 0.2s">
-            <div class="blog-title">ENTRY 002</div>
+            <div class="blog-title">ENTRY 003</div>
             <div class="blog-date">01-01-2024</div>
             <div class="blog-content">
 > The ball must fit through the hole, but once it fits through it must keep fitting through.
@@ -165,7 +177,7 @@
             "> <span class='scripture'>— Jeremiah 29:11</span>"
         ];
 
-        // (200 total)
+        // Generate 198 more blog posts (200 total)
         const blogContainer = document.getElementById('blogContainer');
         const startDate = new Date(2020, 0, 7); // Starting after the first two posts
         
@@ -174,7 +186,7 @@
             postDate.setDate(postDate.getDate() + i * 3);
             
             const dateString = postDate.toISOString().split('T')[0];
-            const postNumber = i + 3; // Starting from 003
+            const postNumber = i + 4; // Starting from 003
             
             const postHTML = `
                 <div class="blog-post" style="animation-delay: ${(i + 2) * 0.05}s">
