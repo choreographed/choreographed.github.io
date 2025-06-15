@@ -156,9 +156,24 @@
 > Sonder?.
     </div>
 </div>
+
+<div class="blog-post" style="animation-delay: 0.3s">
+    <div class="blog-title">ENTRY 003</div>
+    <div class="blog-date">00-00-0000</div>
+    <div class="blog-content">
+> TouchDesign.
+> .
+
+<video controls>
+  <source src="media/videos/WhiteVid.mp4" type="video/mp4">
+</video>
+
+> .
+    </div>
+</div>
         
         <div class="blog-post" style="animation-delay: 0.2s">
-            <div class="blog-title">ENTRY 003</div>
+            <div class="blog-title">ENTRY 004</div>
             <div class="blog-date">01-01-2024</div>
             <div class="blog-content">
 > The ball must fit through the hole, but once it fits through it must keep fitting through.
@@ -184,10 +199,10 @@
         
         for (let i = 0; i < 198; i++) {
             const postDate = new Date(startDate);
-            postDate.setDate(postDate.getDate() + i * 4);
+            postDate.setDate(postDate.getDate() + i * 5);
             
             const dateString = postDate.toISOString().split('T')[0];
-            const postNumber = i + 4; // Starting from 003
+            const postNumber = i + 5; // Starting from 003
             
             const postHTML = `
                 <div class="blog-post" style="animation-delay: ${(i + 2) * 0.05}s">
