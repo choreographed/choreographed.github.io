@@ -17,7 +17,24 @@
             cursor: default;
             text-shadow: 0 0 5px #0066ff;
             overflow-y: auto;
+            font-size: 16px;
         }
+        
+        /* Mobile adjustments */
+        @media (max-width: 768px) {
+            html, body {
+                font-size: 14px;
+                line-height: 1.5;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            html, body {
+                font-size: 12px;
+                line-height: 1.6;
+            }
+        }
+        
         .header {
             padding: 20px;
             border-bottom: 1px solid #00b4ff;
@@ -27,35 +44,101 @@
             top: 0;
             z-index: 100;
         }
+        
+        @media (max-width: 768px) {
+            .header {
+                padding: 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header {
+                padding: 10px;
+            }
+        }
+        
         .title {
             color: white;
             font-size: 2.5rem;
             margin: 0;
             text-shadow: 0 0 10px white;
         }
+        
+        @media (max-width: 768px) {
+            .title {
+                font-size: 2rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .title {
+                font-size: 1.5rem;
+            }
+        }
+        
         .content-container {
             padding: 20px;
             max-width: 800px;
             margin: 0 auto;
         }
+        
+        @media (max-width: 768px) {
+            .content-container {
+                padding: 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .content-container {
+                padding: 10px;
+            }
+        }
+        
         .ape-fact {
             margin-bottom: 25px;
             border-left: 3px solid #00ff88;
             padding-left: 15px;
             animation: glitch 2s infinite alternate;
+            white-space: pre-line;
         }
+        
+        @media (max-width: 480px) {
+            .ape-fact {
+                margin-bottom: 20px;
+                padding-left: 10px;
+            }
+        }
+        
         @keyframes glitch {
             0% { text-shadow: 0 0 5px #00b4ff; }
             20% { text-shadow: 0 0 8px #ff00ff; }
             100% { text-shadow: 0 0 5px #00ff88; }
         }
+        
         .ape-image {
             max-width: 100%;
+            height: auto;
             border: 1px solid #00ff88;
             margin: 20px 0;
             box-shadow: 0 0 15px #008844;
             filter: sepia(50%) hue-rotate(120deg);
+            display: block;
         }
+        
+        @media (max-width: 768px) {
+            .ape-image {
+                margin: 15px 0;
+                box-shadow: 0 0 10px #008844;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .ape-image {
+                margin: 10px 0;
+                box-shadow: 0 0 8px #008844;
+            }
+        }
+        
         .home-button {
             position: absolute;
             top: 20px;
@@ -66,6 +149,21 @@
             opacity: 0.8;
             transition: all 0.3s;
         }
+        
+        @media (max-width: 768px) {
+            .home-button {
+                position: static;
+                display: block;
+                margin-top: 10px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .home-button {
+                font-size: 0.9rem;
+            }
+        }
+        
         .home-button:hover {
             opacity: 1;
             text-shadow: 0 0 8px #00b4ff;
@@ -80,8 +178,7 @@
 
     <div class="content-container">
         <!-- Ape Profile Image -->
-
-<img src="/media/images/Flowers.JPG" class="ape-image" alt="Ape">
+        <img src="./media/images/Flowers.JPG" class="ape-image" alt="Ape" onerror="this.style.display='none'">
 
         <!-- Ape Facts -->
         <div class="ape-fact">
@@ -116,12 +213,12 @@
 
     <script>
         const facts = document.querySelectorAll('.ape-fact');
-        facts.forEach(fact => {
+        facts.forEach((fact, index) => {
             fact.style.opacity = 0;
             setTimeout(() => {
                 fact.style.transition = "opacity 1.5s";
                 fact.style.opacity = 1;
-            }, 200);
+            }, 200 + (index * 100));
         });
     </script>
 </body>
