@@ -79,7 +79,7 @@
             font-size: 1rem;
             padding: 5px;
             opacity: 0.8;
-            transition: opacity 0.3s;
+            transition: all 0.3s;
         }
         .home-button:hover {
             opacity: 1;
@@ -89,40 +89,90 @@
             color: #00ff88;
             text-shadow: 0 0 5px #008844;
         }
-                .home-button {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            color: #00b4ff;
-            font-family: 'Courier New', monospace;
-            text-decoration: none;
-            text-shadow: 0 0 5px #0066ff;
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 1rem;
-            padding: 5px;
-            opacity: 0.8;
-            transition: all 0.3s;
+        .blog-image {
+            max-width: 100%;
+            border: 1px solid #00b4ff;
+            margin: 10px 0;
+            box-shadow: 0 0 10px #0066ff;
+            filter: hue-rotate(180deg) contrast(1.2);
         }
-        .home-button:hover {
+        .blog-video {
+            width: 100%;
+            max-width: 800px;
+            border: 1px solid #00b4ff;
+            margin: 15px 0;
+            box-shadow: 0 0 10px #0066ff;
+        }
+        
+        /* Loading indicator */
+        .loading-indicator {
+            text-align: center;
+            padding: 40px;
+            color: #00b4ff;
+            text-shadow: 0 0 5px #0066ff;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .loading-indicator.visible {
             opacity: 1;
-            text-shadow: 0 0 8px #00b4ff;
-        } 
-                .blog-image {
-    max-width: 100%;
-    border: 1px solid #00b4ff;
-    margin: 10px 0;
-    box-shadow: 0 0 10px #0066ff;
-    filter: hue-rotate(180deg) contrast(1.2); /* Optional glitch effect */
-}.blog-video {
-    width: 100%;
-    max-width: 800px; /* Optional: Limit width */
-    border: 1px solid #00b4ff;
-    margin: 15px 0;
-    box-shadow: 0 0 10px #0066ff;
-}
+        }
+        .loading-dots {
+            animation: loadingDots 1.4s infinite;
+        }
+        @keyframes loadingDots {
+            0%, 80%, 100% { opacity: 0; }
+            40% { opacity: 1; }
+        }
+        
+        /* Sentinel for intersection observer */
+        .load-more-sentinel {
+            height: 20px;
+            margin: 20px 0;
+        }
 
+        /* Mobile viewport fixes */
+        @media (max-width: 768px) {
+            .title {
+                font-size: 1.8rem;
+            }
+            .header {
+                padding: 15px;
+            }
+            .blog-container {
+                padding: 15px;
+            }
+            .home-button {
+                font-size: 0.9rem;
+                top: 15px;
+                right: 15px;
+            }
+            .blog-title {
+                font-size: 1.2rem;
+            }
+            .blog-video {
+                height: auto;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .title {
+                font-size: 1.5rem;
+            }
+            .header {
+                padding: 10px;
+            }
+            .blog-container {
+                padding: 10px;
+            }
+            .home-button {
+                font-size: 0.8rem;
+                top: 10px;
+                right: 10px;
+            }
+            .blog-title {
+                font-size: 1.1rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -130,8 +180,8 @@
         <h1 class="title">INTERNET MONARCH - BLOG</h1>
         <a href="index.html" class="home-button">[HOME]</a>
     </div>
-        <div class="blog-container" id="blogContainer">
-        <!-- First two sample posts -->
+    <div class="blog-container" id="blogContainer">
+        <!-- First few sample posts -->
         <div class="blog-post" style="animation-delay: 0.1s">
             <div class="blog-title">ENTRY 001</div>
             <div class="blog-date">03-09-2024</div>
@@ -142,52 +192,52 @@
             </div>
         </div>
 
-<div class="blog-post" style="animation-delay: 0.3s">
-    <div class="blog-title">ENTRY 002</div>
-    <div class="blog-date">06-09-2024</div>
-    <div class="blog-content">
+        <div class="blog-post" style="animation-delay: 0.3s">
+            <div class="blog-title">ENTRY 002</div>
+            <div class="blog-date">06-09-2024</div>
+            <div class="blog-content">
 > Something I found online.
 > It fits my mindset well, I think.
 
-<video controls>
+<video class="blog-video" controls preload="none" loading="lazy">
   <source src="media/videos/Nigggaaaa.mp4" type="video/mp4">
 </video>
 
 > Sonder?.
-    </div>
-</div>
+            </div>
+        </div>
 
-<div class="blog-post" style="animation-delay: 0.3s">
-    <div class="blog-title">ENTRY 003</div>
-    <div class="blog-date">00-00-0000</div>
-    <div class="blog-content">
+        <div class="blog-post" style="animation-delay: 0.5s">
+            <div class="blog-title">ENTRY 003</div>
+            <div class="blog-date">00-00-0000</div>
+            <div class="blog-content">
 > TouchDesign.
 > .
 
-<video controls>
+<video class="blog-video" controls preload="none" loading="lazy">
   <source src="media/videos/WhiteVid.mp4" type="video/mp4">
 </video>
 
 > .
-    </div>
-</div>
+            </div>
+        </div>
 
-<div class="blog-post" style="animation-delay: 0.3s">
-    <div class="blog-title">ENTRY 004</div>
-    <div class="blog-date">00-00-0000</div>
-    <div class="blog-content">
+        <div class="blog-post" style="animation-delay: 0.7s">
+            <div class="blog-title">ENTRY 004</div>
+            <div class="blog-date">00-00-0000</div>
+            <div class="blog-content">
 > New ideas.
 > I'm learning the software slowly.
 
-<video controls>
+<video class="blog-video" controls preload="none" loading="lazy">
   <source src="media/videos/GreenVid.mp4" type="video/mp4">
 </video>
 
 > .
-    </div>
-</div>
+            </div>
+        </div>
         
-        <div class="blog-post" style="animation-delay: 0.2s">
+        <div class="blog-post" style="animation-delay: 0.9s">
             <div class="blog-title">ENTRY 005</div>
             <div class="blog-date">01-01-2024</div>
             <div class="blog-content">
@@ -195,6 +245,14 @@
 > It carries on squeezing through the center. It is all infinite.
 > Now I am the ball and I must keep moving thorugh it all. Always.
             </div>
+        </div>
+        
+        <!-- Sentinel element for infinite scroll -->
+        <div class="load-more-sentinel" id="loadMoreSentinel"></div>
+        
+        <!-- Loading indicator -->
+        <div class="loading-indicator" id="loadingIndicator">
+            > Loading more entries<span class="loading-dots">...</span>
         </div>
     </div>
 
@@ -208,39 +266,123 @@
             "> <span class='scripture'>— Jeremiah 29:11</span>"
         ];
 
-        // Generate 198 more blog posts (200 total)
-        const blogContainer = document.getElementById('blogContainer');
-        const startDate = new Date(2020, 0, 7); // Starting after the first two posts
+        // Pagination state
+        let currentPage = 0;
+        const postsPerPage = 10;
+        const totalPosts = 200;
+        let isLoading = false;
         
-        for (let i = 0; i < 198; i++) {
-            const postDate = new Date(startDate);
-            postDate.setDate(postDate.getDate() + i * 5);
+        const blogContainer = document.getElementById('blogContainer');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const sentinel = document.getElementById('loadMoreSentinel');
+
+        // Function to generate a batch of blog posts
+        function generateBlogPosts(page) {
+            const startIndex = page * postsPerPage;
+            const endIndex = Math.min(startIndex + postsPerPage, totalPosts);
+            const startDate = new Date(2020, 0, 7);
             
-            const dateString = postDate.toISOString().split('T')[0];
-            const postNumber = i + 5; // Starting from 003
+            const posts = [];
             
-            const postHTML = `
-                <div class="blog-post" style="animation-delay: ${(i + 2) * 0.05}s">
-                    <div class="blog-title">ENTRY ${postNumber.toString().padStart(3, '0')}</div>
-                    <div class="blog-date">${dateString}</div>
-                    <div class="blog-content">
+            for (let i = startIndex; i < endIndex; i++) {
+                const postDate = new Date(startDate);
+                postDate.setDate(postDate.getDate() + i * 5);
+                
+                const dateString = postDate.toISOString().split('T')[0];
+                const postNumber = i + 6; // Starting from 006 after the initial 5 posts
+                
+                const postHTML = `
+                    <div class="blog-post" style="animation-delay: ${(i % postsPerPage) * 0.1}s">
+                        <div class="blog-title">ENTRY ${postNumber.toString().padStart(3, '0')}</div>
+                        <div class="blog-date">${dateString}</div>
+                        <div class="blog-content">
 ${scriptures.join('\n')}
+                        </div>
                     </div>
-                </div>
-            `;
+                `;
+                posts.push(postHTML);
+            }
             
-            blogContainer.innerHTML += postHTML;
+            return posts;
         }
 
-        // Security measures
-        document.addEventListener('copy', function(e) {
-            e.preventDefault();
-            return false;
+        // Function to load more posts
+        function loadMorePosts() {
+            if (isLoading || (currentPage * postsPerPage) >= (totalPosts - 5)) {
+                return;
+            }
+            
+            isLoading = true;
+            loadingIndicator.classList.add('visible');
+            
+            // Simulate loading delay for better UX
+            setTimeout(() => {
+                const newPosts = generateBlogPosts(currentPage);
+                
+                // Insert posts before the sentinel
+                newPosts.forEach(postHTML => {
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = postHTML;
+                    const postElement = tempDiv.firstElementChild;
+                    blogContainer.insertBefore(postElement, sentinel);
+                });
+                
+                currentPage++;
+                isLoading = false;
+                loadingIndicator.classList.remove('visible');
+                
+                // Hide sentinel and loading indicator if we've loaded all posts
+                if ((currentPage * postsPerPage) >= (totalPosts - 5)) {
+                    sentinel.style.display = 'none';
+                    loadingIndicator.style.display = 'none';
+                }
+            }, 800); // Loading delay for better UX
+        }
+
+        // Intersection Observer for infinite scroll
+        const observer = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting) {
+                loadMorePosts();
+            }
+        }, {
+            threshold: 0.1,
+            rootMargin: '100px'
         });
 
-        document.addEventListener('contextmenu', function(e) {
-            e.preventDefault();
+        // Start observing the sentinel element
+        observer.observe(sentinel);
+
+        // Lazy loading for videos using Intersection Observer
+        const videoObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const video = entry.target;
+                    if (video.getAttribute('preload') === 'none') {
+                        video.setAttribute('preload', 'metadata');
+                    }
+                    videoObserver.unobserve(video);
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '200px'
         });
+
+        // Observe all existing videos
+        document.querySelectorAll('video').forEach(video => {
+            videoObserver.observe(video);
+        });
+
+        // Function to observe new videos as they're added
+        function observeNewVideos(container) {
+            const videos = container.querySelectorAll('video[preload="none"]');
+            videos.forEach(video => {
+                videoObserver.observe(video);
+            });
+        }
+
+        // Load first batch of posts
+        loadMorePosts();
 
         window.scrollTo(0, 0);
     </script>
