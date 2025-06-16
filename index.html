@@ -303,7 +303,7 @@
         let currentInput = '';
         let isMobile = window.innerWidth <= 768;
 
-        // Auto-start sequence
+        // start sequence
         function startSequence() {
             if (currentStep < loginSteps.length) {
                 const newLine = document.createElement('div');
@@ -368,7 +368,7 @@
             });
         }
 
-        // Process user commands
+        // user commands
         function processCommand(command) {
             switch(command) {
                 case 'blog':
@@ -427,7 +427,7 @@
             }
         }
 
-        // Update time
+        //  time
         function updateTime() {
             const timeElements = document.querySelectorAll('.terminal-line');
             timeElements.forEach(element => {
