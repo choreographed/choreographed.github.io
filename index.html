@@ -40,7 +40,7 @@
             }
         }
         
-        /* Custom scrollbar */
+
         ::-webkit-scrollbar {
             width: 12px;
         }
@@ -266,7 +266,7 @@
     </div>
 
     <script>
-        // Login sequence steps
+
         const loginSteps = [
             "> Have you ever read the obituaries of lost addicts?",
             "> They are the biggest bunch of bullshit that I've ever heard.",
@@ -303,7 +303,7 @@
         let currentInput = '';
         let isMobile = window.innerWidth <= 768;
 
-        // start sequence
+
         function startSequence() {
             if (currentStep < loginSteps.length) {
                 const newLine = document.createElement('div');
@@ -314,10 +314,10 @@
                 
                 currentStep++;
                 
-                // Continue sequence
+
                 setTimeout(startSequence, 200);
                 
-                // Show input for desktop after last step
+
                 if (currentStep === loginSteps.length && !isMobile) {
                     setTimeout(() => {
                         inputContainer.style.display = 'flex';
@@ -327,10 +327,10 @@
             }
         }
 
-        // Start sequence automatically
+
         setTimeout(startSequence, 500);
 
-        // Desktop keyboard event listener
+
         if (!isMobile) {
             document.addEventListener('keydown', function(e) {
                 if (!inputEnabled) return;
@@ -338,37 +338,37 @@
                 if (e.key === 'Enter') {
                     e.preventDefault();
                     
-                    // Process command
+
                     const command = currentInput.trim().toLowerCase();
                     
-                    // Add command to history
+
                     const commandLine = document.createElement('div');
                     commandLine.className = 'terminal-line';
                     commandLine.textContent = '> ' + command;
                     commandHistory.appendChild(commandLine);
                     
-                    // Process the command
+
                     processCommand(command);
                     
-                    // Clear input
+
                     currentInput = '';
                     commandDisplay.textContent = '';
                     
-                    // Scroll to bottom
+
                     window.scrollTo(0, document.body.scrollHeight);
                 } else if (e.key.length === 1) {
-                    // Regular character input
+
                     currentInput += e.key;
                     commandDisplay.textContent = currentInput;
                 } else if (e.key === 'Backspace') {
-                    // Handle backspace
+
                     currentInput = currentInput.slice(0, -1);
                     commandDisplay.textContent = currentInput;
                 }
             });
         }
 
-        // user commands
+
         function processCommand(command) {
             switch(command) {
                 case 'blog':
