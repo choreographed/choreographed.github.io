@@ -124,7 +124,7 @@
             40% { opacity: 1; }
         }
         
-        /* Sentinel  intersection observer */
+
         .load-more-sentinel {
             height: 20px;
             margin: 20px 0;
@@ -256,17 +256,17 @@
             </div>
         </div>
         
-        <!-- Sentinel element for infinite scroll -->
+
         <div class="load-more-sentinel" id="loadMoreSentinel"></div>
         
-        <!-- Loading indicator -->
+
         <div class="loading-indicator" id="loadingIndicator">
             > Loading more entries<span class="loading-dots">...</span>
         </div>
     </div>
 
     <script>
-        // Scriptures add later
+
         const scriptures = [
             "> <span class='scripture'>\"There is surely a future hope for you, and your hope will not be cut off.\"</span>",
             "> <span class='scripture'>— Proverbs 23:18</span>",
@@ -275,7 +275,7 @@
             "> <span class='scripture'>— Jeremiah 29:11</span>"
         ];
 
-        // Pagination state
+
         let currentPage = 0;
         const postsPerPage = 10;
         const totalPosts = 200;
@@ -285,7 +285,7 @@
         const loadingIndicator = document.getElementById('loadingIndicator');
         const sentinel = document.getElementById('loadMoreSentinel');
 
-        // Function to generate a batch of blog posts
+
         function generateBlogPosts(page) {
             const startIndex = page * postsPerPage;
             const endIndex = Math.min(startIndex + postsPerPage, totalPosts);
@@ -315,7 +315,7 @@ ${scriptures.join('\n')}
             return posts;
         }
 
-        // Function to load more posts
+
         function loadMorePosts() {
             if (isLoading || (currentPage * postsPerPage) >= (totalPosts - 5)) {
                 return;
@@ -324,11 +324,11 @@ ${scriptures.join('\n')}
             isLoading = true;
             loadingIndicator.classList.add('visible');
             
-            // Simulate loading delay for better UX
+
             setTimeout(() => {
                 const newPosts = generateBlogPosts(currentPage);
                 
-                // Insert posts before the sentinel
+
                 newPosts.forEach(postHTML => {
                     const tempDiv = document.createElement('div');
                     tempDiv.innerHTML = postHTML;
@@ -340,15 +340,15 @@ ${scriptures.join('\n')}
                 isLoading = false;
                 loadingIndicator.classList.remove('visible');
                 
-                // Hide sentinel and loading indicator if we've loaded all posts
+
                 if ((currentPage * postsPerPage) >= (totalPosts - 5)) {
                     sentinel.style.display = 'none';
                     loadingIndicator.style.display = 'none';
                 }
-            }, 800); // Loading delay for better UX
+            }, 800); 
         }
 
-        // Intersection Observer for infinite scroll
+
         const observer = new IntersectionObserver((entries) => {
             if (entries[0].isIntersecting) {
                 loadMorePosts();
@@ -358,10 +358,10 @@ ${scriptures.join('\n')}
             rootMargin: '100px'
         });
 
-        // Start observing the sentinel element
+
         observer.observe(sentinel);
 
-        // Lazy loading for videos using Intersection Observer
+
         const videoObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -377,12 +377,12 @@ ${scriptures.join('\n')}
             rootMargin: '200px'
         });
 
-        // Observe all existing videos
+
         document.querySelectorAll('video').forEach(video => {
             videoObserver.observe(video);
         });
 
-        // Function to observe new videos as they're added
+
         function observeNewVideos(container) {
             const videos = container.querySelectorAll('video[preload="none"]');
             videos.forEach(video => {
@@ -390,7 +390,7 @@ ${scriptures.join('\n')}
             });
         }
 
-        // Load first batch of posts
+
         loadMorePosts();
 
         window.scrollTo(0, 0);
