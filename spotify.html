@@ -562,20 +562,16 @@
             console.log('No access token found in URL');
         });
 
-        // Modified login function
-        function loginWithSpotify() {
-            // First, clear any existing token
-            accessToken = null;
-            
-            const authURL = `https://accounts.spotify.com/authorize?` 
-                `client_id=4fd59d9f62a94deb82340632ad0268b5&` 
-                `response_type=token&` 
-                `redirect_uri=https://internetmonar.ch/spotify.html&)}&` 
-                `scope=user-read-private` 
-                `show_dialog=true`; // Added show_dialog to ensure fresh login
-            
-            window.location.href = authURL;
-        }
+function loginWithSpotify() {
+    const authURL = `https://accounts.spotify.com/authorize?` +
+        `client_id=${4fd59d9f62a94deb82340632ad0268b5}&` +
+        `response_type=token&` +
+        `redirect_uri=${encodeURIComponent(https://internetmonar.ch/spotify.html)}&` +
+        `scope=${encodeURIComponent(user-read-private)}&` +
+        `show_dialog=true`; // Force fresh login
+    
+    window.location.href = authURL;
+}
 
         // [Rest of the functions remain exactly the same:
         // spotifyRequest(), loadUserData(), loadLikedTracks(), 
