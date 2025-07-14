@@ -565,7 +565,8 @@ function loginWithSpotify() {
         `scope=${encodeURIComponent('user-read-private')}&` +
         `show_dialog=true`;
     
-    window.location.href = authURL;  // Perform the redirect
+    
+    window.location.assign(authURL.toString());
 }
 
         
