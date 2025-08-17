@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internet Monarch</title>
+    <style>
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #000000;
+            color: #00b4ff;
+            font-family: 'Courier New', monospace;
+            line-height: 1.2;
+            cursor: default;
+            padding: 0;
+            text-shadow: 0 0 5px #0066ff;
+            overflow: hidden;
+            font-size: 16px;
+            user-select: none;
+        }
+
+        .desktop {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        .desktop-icon {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .desktop-icon:hover {
+            background-color: rgba(0, 180, 255, 0.1);
+            border: 1px solid #00b4ff;
+            box-shadow: 0 0 10px rgba(0, 180, 255, 0.3);
+        }
+
+        .desktop-icon.selected {
+            background-color: rgba(0, 180, 255, 0.2);
+            border: 1px solid #00b4ff;
+            box-shadow: 0 0 15px rgba(0, 180, 255, 0.5);
+        }
+
+        .icon-image {
+            width: 40px;
+            height: 40px;
+            margin-bottom: 8px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            border: 1px solid #00b4ff;
+            background-color: rgba(0, 180, 255, 0.1);
+        }
+
+        .icon-label {
+            color: #00b4ff;
+            font-size: 11px;
+            text-align: center;
+            text-shadow: 0 0 5px #0066ff;
+            line-height: 1.2;
+            font-family: 'Courier New', monospace;
+        }
+
+        .taskbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            background-color: rgba(0, 0, 0, 0.9);
+            border-top: 2px solid #00b4ff;
+            display: flex;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .start-button {
+            height: 40px;
+            margin: 5px;
+            padding: 0 20px;
+            background: none;
+            border: 2px solid #00b4ff;
+            color: #00b4ff;
+            font-weight: bold;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Courier New', monospace;
+            text-shadow: 0 0 5px #0066ff;
+            transition: all 0.3s ease;
+        }
+
+        .start-button:hover {
+            background-color: rgba(0, 180, 255, 0.1);
+            box-shadow: 0 0 10px rgba(0, 180, 255, 0.3);
+        }
+
+        .start-button:active {
+            background-color: rgba(0, 180, 255, 0.2);
+        }
+
+        .start-button::before {
+            content: "▶";
+            font-size: 16px;
+        }
+
+        .window-tabs {
+            flex: 1;
+            display: flex;
+            gap: 4px;
+            margin: 0 5px;
+        }
+
+        .window-tab {
+            height: 40px;
+            padding: 0 15px;
+            background: none;
+            border: 2px solid #003366;
+            color: #00b4ff;
+            font-size: 11px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            max-width: 200px;
+            overflow: hidden;
+            white-space: nowrap;
+            font-family: 'Courier New', monospace;
+            text-shadow: 0 0 5px #0066ff;
+            transition: all 0.3s ease;
+        }
+
+        .window-tab.active {
+            border-color: #00b4ff;
+            background-color: rgba(0, 180, 255, 0.1);
+            box-shadow: 0 0 10px rgba(0, 180, 255, 0.3);
+        }
+
+        .system-tray {
+            height: 40px;
+            margin: 5px;
+            padding: 0 15px;
+            background: none;
+            border: 2px solid #003366;
+            color: #00b4ff;
+            display: flex;
+            align-items: center;
+            font-size: 11px;
+            font-family: 'Courier New', monospace;
+            text-shadow: 0 0 5px #0066ff;
+        }
+
+        .window {
+            position: absolute;
+            min-width: 350px;
+            min-height: 250px;
+            background-color: rgba(0, 0, 0, 0.95);
+            border: 2px solid #00b4ff;
+            box-shadow: 0 0 20px rgba(0, 180, 255, 0.4);
+            display: none;
+        }
+
+        .window.active {
+            display: block;
+            z-index: 100;
+        }
+
+        .window-header {
+            height: 30px;
+            background: linear-gradient(to right, #001122, #003366);
+            color: #00b4ff;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            font-weight: bold;
+            cursor: move;
+            border-bottom: 1px solid #00b4ff;
+            font-family: 'Courier New', monospace;
+            text-shadow: 0 0 5px #0066ff;
+        }
+
+        .window-title {
+            flex: 1;
+            font-size: 12px;
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 4px;
+        }
+
+        .window-control {
+            width: 22px;
+            height: 20px;
+            background: none;
+            border: 1px solid #00b4ff;
+            color: #00b4ff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+            transition: all 0.3s ease;
+        }
+
+        .window-control:hover {
+            background-color: rgba(0, 180, 255, 0.2);
+            box-shadow: 0 0 8px rgba(0, 180, 255, 0.3);
+        }
+
+        .window-control:active {
+            background-color: rgba(0, 180, 255, 0.3);
+        }
+
+        .window-content {
+            padding: 15px;
+            height: calc(100% - 30px);
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #00b4ff;
+            font-family: 'Courier New', monospace;
+            text-shadow: 0 0 5px #0066ff;
+        }
+
+        .music-player {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .player-display {
+            background-color: #000000;
+            color: #00ff88;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            border: 2px solid #00b4ff;
+            text-align: center;
+            font-size: 16px;
+            text-shadow: 0 0 5px #00ff88;
+        }
+
+        .player-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .player-button {
+            width: 50px;
+            height: 40px;
+            background: none;
+            border: 2px solid #00b4ff;
+            color: #00b4ff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-family: 'Courier New', monospace;
+            transition: all 0.3s ease;
+        }
+
+        .player-button:hover {
+            background-color: rgba(0, 180, 255, 0.2);
+            box-shadow: 0 0 10px rgba(0, 180, 255, 0.3);
+        }
+
+        .player-button:active {
+            background-color: rgba(0, 180, 255, 0.3);
+        }
+
+        .track-list {
+            border: 2px solid #00b4ff;
+            height: 250px;
+            overflow-y: auto;
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+
+        .track {
+            padding: 8px;
+            cursor: pointer;
+            border-bottom: 1px solid #003366;
+            color: #00b4ff;
+            font-family: 'Courier New', monospace;
+            text-shadow: 0 0 5px #0066ff;
+            transition: all 0.3s ease;
+        }
+
+        .track:hover {
+            background-color: rgba(0, 180, 255, 0.1);
+            border-color: #00b4ff;
+        }
+
+        .track.playing {
+            background-color: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+            text-shadow: 0 0 5px #00ff88;
+        }
+
+        .about-content {
+            text-align: center;
+            padding: 25px;
+        }
+
+        .about-logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: linear-gradient(45deg, #00b4ff, #00ff88);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: #000000;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+            box-shadow: 0 0 15px rgba(0, 180, 255, 0.5);
+        }
+
+        .folder-content {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .folder-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .folder-item:hover {
+            background-color: rgba(0, 180, 255, 0.1);
+            border-color: #00b4ff;
+        }
+
+        .folder-icon {
+            width: 20px;
+            height: 20px;
+            background-color: #00ff88;
+            border: 1px solid #00b4ff;
+        }
+
+        .notepad-content {
+            width: 100%;
+            height: 300px;
+            border: 2px solid #00b4ff;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            resize: none;
+            outline: none;
+            background-color: rgba(0, 0, 0, 0.9);
+            color: #00b4ff;
+            text-shadow: 0 0 5px #0066ff;
+        }
+
+        .notepad-content::placeholder {
+            color: #003366;
+            text-shadow: none;
+        }
+
+        /* Icon backgrounds */
+        .icon-music { 
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBmaWxsPSIjMDBiNGZmIiByeD0iNCIvPgo8cGF0aCBkPSJNMTUgMTJIMjVWMjhIMTVWMTJaIiBmaWxsPSIjMDAwMDAwIi8+CjxjaXJjbGUgY3g9IjEyIiBjeT0iMjIiIHI9IjQiIGZpbGw9IiMwMDAwMDAiLz4KPC9zdmc+'); 
+        }
+        .icon-folder { 
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBmaWxsPSIjMDBmZjg4IiByeD0iNCIvPgo8cGF0aCBkPSJNOCAxMkgzMlYyOEg4VjEyWiIgZmlsbD0iIzAwMDAwMCIvPgo8cGF0aCBkPSJNOCAxMEgxNkwxOCAxMkgzMlYyOEg4VjEwWiIgZmlsbD0iIzAwZmY4OCIvPgo8L3N2Zz4='); 
+        }
+        .icon-notepad { 
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBmaWxsPSIjMDBiNGZmIiByeD0iNCIvPgo8cmVjdCB4PSI4IiB5PSI4IiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIGZpbGw9IiMwMDAwMDAiIHJ4PSIyIi8+CjxwYXRoIGQ9Ik0xMiAxMkgyOE0xMiAxNkgyOE0xMiAyMEgyNCIgc3Ryb2tlPSIjMDBiNGZmIiBzdHJva2Utd2lkdGg9IjIiLz4KPC9zdmc+'); 
+        }
+        .icon-about { 
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiMwMGI0ZmYiLz4KPHRLEHU+IABgQ7h4PSIyMCIgeT0iMjciIGZvbnQtZmFtaWx5PSJDb3VyaWVyIE5ldywgbW9ub3NwYWNlIiBmb250LXNpemU9IjIwcHgiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSIjMDAwMDAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5pPC90ZXh0Pgo8L3N2Zz4='); 
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #000000;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #003366;
+            border-radius: 6px;
+            border: 2px solid #000000;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00b4ff;
+        }
+
+        /* Mobile adjustments */
+        @media (max-width: 768px) {
+            .desktop-icon {
+                width: 70px;
+                height: 70px;
+            }
+            
+            .window {
+                min-width: 300px;
+            }
+            
+            .taskbar {
+                height: 60px;
+            }
+            
+            .start-button, .window-tab, .system-tray {
+                height: 50px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                font-size: 12px;
+            }
+            
+            .desktop-icon {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .icon-image {
+                width: 30px;
+                height: 30px;
+            }
+            
+            .icon-label {
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="desktop" id="desktop">
+        <!-- Desktop Icons -->
+        <div class="desktop-icon" style="top: 30px; left: 30px;" data-window="music-player">
+            <div class="icon-image icon-music"></div>
+            <div class="icon-label">Music Player</div>
+        </div>
+        
+        <div class="desktop-icon" style="top: 30px; left: 150px;" data-window="my-documents">
+            <div class="icon-image icon-folder"></div>
+            <div class="icon-label">My Documents</div>
+        </div>
+        
+        <div class="desktop-icon" style="top: 150px; left: 30px;" data-window="notepad">
+            <div class="icon-image icon-notepad"></div>
+            <div class="icon-label">Notepad</div>
+        </div>
+        
+        <div class="desktop-icon" style="top: 150px; left: 150px;" data-window="about">
+            <div class="icon-image icon-about"></div>
+            <div class="icon-label">About Internet Monarch</div>
+        </div>
+
+        <!-- Windows -->
+        <div class="window" id="music-player" style="top: 120px; left: 250px; width: 450px; height: 500px;">
+            <div class="window-header">
+                <div class="window-title">♫ Internet Monarch Music Player</div>
+                <div class="window-controls">
+                    <div class="window-control" onclick="minimizeWindow('music-player')">_</div>
+                    <div class="window-control" onclick="closeWindow('music-player')">×</div>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="music-player">
+                    <div class="player-display" id="now-playing">♫ Welcome to Internet Monarch ♫</div>
+                    <div class="player-controls">
+                        <div class="player-button" onclick="previousTrack()">⏮</div>
+                        <div class="player-button" onclick="togglePlay()">⏯</div>
+                        <div class="player-button" onclick="nextTrack()">⏭</div>
+                        <div class="player-button" onclick="toggleShuffle()">🔀</div>
+                    </div>
+                    <div class="track-list" id="track-list">
+                        <div class="track" onclick="playTrack(0)">1. Digital Crown</div>
+                        <div class="track" onclick="playTrack(1)">2. Bandwidth Dreams</div>
+                        <div class="track" onclick="playTrack(2)">3. Cyber Kingdom</div>
+                        <div class="track" onclick="playTrack(3)">4. Protocol Paradise</div>
+                        <div class="track" onclick="playTrack(4)">5. Internet Monarch (Title Track)</div>
+                        <div class="track" onclick="playTrack(5)">6. Virtual Throne</div>
+                        <div class="track" onclick="playTrack(6)">7. Data Stream Serenade</div>
+                        <div class="track" onclick="playTrack(7)">8. Online Oracle</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="window" id="my-documents" style="top: 180px; left: 300px; width: 400px; height: 350px;">
+            <div class="window-header">
+                <div class="window-title">📁 My Documents</div>
+                <div class="window-controls">
+                    <div class="window-control" onclick="minimizeWindow('my-documents')">_</div>
+                    <div class="window-control" onclick="closeWindow('my-documents')">×</div>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="folder-content">
+                    <div class="folder-item">
+                        <div class="folder-icon"></div>
+                        <span>Album Artwork</span>
+                    </div>
+                    <div class="folder-item">
+                        <div class="folder-icon"></div>
+                        <span>Lyrics</span>
+                    </div>
+                    <div class="folder-item">
+                        <div class="folder-icon"></div>
+                        <span>Press Kit</span>
+                    </div>
+                    <div class="folder-item">
+                        <div class="folder-icon"></div>
+                        <span>Tour Dates</span>
+                    </div>
+                    <div class="folder-item">
+                        <div class="folder-icon"></div>
+                        <span>Behind the Scenes</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="window" id="notepad" style="top: 240px; left: 350px; width: 450px; height: 400px;">
+            <div class="window-header">
+                <div class="window-title">📝 Notepad - Untitled</div>
+                <div class="window-controls">
+                    <div class="window-control" onclick="minimizeWindow('notepad')">_</div>
+                    <div class="window-control" onclick="closeWindow('notepad')">×</div>
+                </div>
+            </div>
+            <div class="window-content">
+                <textarea class="notepad-content" placeholder="Welcome to Internet Monarch's digital realm...
+
+This is your space to take notes, write lyrics, or just jot down thoughts while you explore our musical kingdom.
+
+Feel free to write anything here - it's your personal notepad in our retro digital world!">Internet Monarch - Album Notes
+================================
+
+A journey through the digital landscape where music meets technology.
+
+Track 1: Digital Crown
+- Opening with ethereal synths
+- Building to powerful electronic beats
+- Represents taking control of your digital destiny
+
+Track 2: Bandwidth Dreams
+- Exploring the space between connection and isolation
+- Glitchy vocals over ambient soundscapes
+
+...</textarea>
+            </div>
+        </div>
+
+        <div class="window" id="about" style="top: 150px; left: 400px; width: 400px; height: 320px;">
+            <div class="window-header">
+                <div class="window-title">ℹ️ About Internet Monarch</div>
+                <div class="window-controls">
+                    <div class="window-control" onclick="minimizeWindow('about')">_</div>
+                    <div class="window-control" onclick="closeWindow('about')">×</div>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="about-content">
+                    <div class="about-logo">IM</div>
+                    <h2>Internet Monarch</h2>
+                    <p><strong>Digital Realm Explorer</strong></p>
+                    <br>
+                    <p>Welcome to the kingdom where technology and creativity merge into something extraordinary.</p>
+                    <br>
+                    <p>Internet Monarch represents the sovereignty of digital expression, crafting soundscapes that bridge the virtual and the visceral.</p>
+                    <br>
+                    <p><em>Version 1.0 - Retro Interface Edition</em></p>
+                    <p><em>© 2024 Internet Monarch</em></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="taskbar">
+        <div class="start-button" onclick="toggleStartMenu()">Start</div>
+        <div class="window-tabs" id="window-tabs"></div>
+        <div class="system-tray" id="system-tray">3:47 PM</div>
+    </div>
+
+    <script>
+        let currentTrack = -1;
+        let isPlaying = false;
+        let isShuffled = false;
+        let draggedWindow = null;
+        let dragOffset = {x: 0, y: 0};
+        
+        const tracks = [
+            "Digital Crown",
+            "Bandwidth Dreams", 
+            "Cyber Kingdom",
+            "Protocol Paradise",
+            "Internet Monarch (Title Track)",
+            "Virtual Throne",
+            "Data Stream Serenade",
+            "Online Oracle"
+        ];
+
+        // Update time
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            document.getElementById('system-tray').textContent = timeString;
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        // Desktop icon interactions
+        document.querySelectorAll('.desktop-icon').forEach(icon => {
+            icon.addEventListener('dblclick', () => {
+                const windowId = icon.dataset.window;
+                openWindow(windowId);
+            });
+            
+            icon.addEventListener('click', () => {
+                document.querySelectorAll('.desktop-icon').forEach(i => i.classList.remove('selected'));
+                icon.classList.add('selected');
+            });
+        });
+
+        // Window management
+        function openWindow(windowId) {
+            const window = document.getElementById(windowId);
+            window.classList.add('active');
+            bringToFront(window);
+            updateTaskbar();
+        }
+
+        function closeWindow(windowId) {
+            const window = document.getElementById(windowId);
+            window.classList.remove('active');
+            updateTaskbar();
+        }
+
+        function minimizeWindow(windowId) {
+            const window = document.getElementById(windowId);
+            window.classList.remove('active');
+            updateTaskbar();
+        }
+
+        function bringToFront(window) {
+            const windows = document.querySelectorAll('.window');
+            windows.forEach(w => w.style.zIndex = '100');
+            window.style.zIndex = '200';
+        }
+
+        function updateTaskbar() {
+            const tabsContainer = document.getElementById('window-tabs');
+            tabsContainer.innerHTML = '';
+            
+            document.querySelectorAll('.window.active').forEach(window => {
+                const tab = document.createElement('div');
+                tab.className = 'window-tab';
+                tab.textContent = window.querySelector('.window-title').textContent;
+                tab.onclick = () => bringToFront(window);
+                tabsContainer.appendChild(tab);
+            });
+        }
+
+        // Window dragging
+        document.querySelectorAll('.window-header').forEach(header => {
+            header.addEventListener('mousedown', (e) => {
+                draggedWindow = header.closest('.window');
+                const rect = draggedWindow.getBoundingClientRect();
+                dragOffset.x = e.clientX - rect.left;
+                dragOffset.y = e.clientY - rect.top;
+                bringToFront(draggedWindow);
+            });
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (draggedWindow) {
+                const x = e.clientX - dragOffset.x;
+                const y = e.clientY - dragOffset.y;
+                draggedWindow.style.left = Math.max(0, Math.min(x, window.innerWidth - draggedWindow.offsetWidth)) + 'px';
+                draggedWindow.style.top = Math.max(0, Math.min(y, window.innerHeight - draggedWindow.offsetHeight - 50)) + 'px';
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            draggedWindow = null;
+        });
+
+        // Music player functions
+        function playTrack(index) {
+            const trackElements = document.querySelectorAll('.track');
+            trackElements.forEach(t => t.classList.remove('playing'));
+            trackElements[index].classList.add('playing');
+            
+            currentTrack = index;
+            document.getElementById('now-playing').textContent = `♪ Now Playing: ${tracks[index]} ♪`;
+            isPlaying = true;
+        }
+
+        function togglePlay() {
+            if (currentTrack === -1) {
+                playTrack(0);
+            } else {
+                isPlaying = !isPlaying;
+                const display = document.getElementById('now-playing');
+                if (isPlaying) {
+                    display.textContent = `♪ Now Playing: ${tracks[currentTrack]} ♪`;
+                } else {
+                    display.textContent = `⏸ Paused: ${tracks[currentTrack]}`;
+                }
+            }
+        }
+
+        function nextTrack() {
+            if (currentTrack < tracks.length - 1) {
+                playTrack(currentTrack + 1);
+            } else {
+                playTrack(0);
+            }
+        }
+
+        function previousTrack() {
+            if (currentTrack > 0) {
+                playTrack(currentTrack - 1);
+            } else {
+                playTrack(tracks.length - 1);
+            }
+        }
+
+        function toggleShuffle() {
+            isShuffled = !isShuffled;
+            document.getElementById('now-playing').textContent = isShuffled ? 
+                '🔀 Shuffle Mode ON' : '🔀 Shuffle Mode OFF';
+            setTimeout(() => {
+                if (currentTrack !== -1) {
+                    document.getElementById('now-playing').textContent = `♪ Now Playing: ${tracks[currentTrack]} ♪`;
+                } else {
+                    document.getElementById('now-playing').textContent = '♫ Welcome to Internet Monarch ♫';
+                }
+            }, 1500);
+        }
+
+        function toggleStartMenu() {
+            // Placeholder for start menu functionality
+            alert('Start Menu - Coming Soon!\n\nThis retro interface is a tribute to classic desktop experiences.');
+        }
+
+        // Click outside to deselect icons
+        document.getElementById('desktop').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) {
+                document.querySelectorAll('.desktop-icon').forEach(i => i.classList.remove('selected'));
+            }
+        });
+
+        // Prevent context menu
+        document.addEventListener('contextmenu', (e) => e.preventDefault());
+        
+        // Initialize with welcome state
+        setTimeout(() => {
+            openWindow('about');
+        }, 1000);
+    </script>
+</body>
+</html>
