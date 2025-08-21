@@ -713,59 +713,210 @@
             draggedWindow = null;
         });
 
-        // Music player functions
-        function playTrack(index) {
-            const trackElements = document.querySelectorAll('.track');
-            trackElements.forEach(t => t.classList.remove('playing'));
-            trackElements[index].classList.add('playing');
-            
-            currentTrack = index;
-            document.getElementById('now-playing').textContent = `♪ Now Playing: ${tracks[index]} ♪`;
+// Enhanced Music Player JavaScript for Internet Monarch
+// Replace the existing music player functions in your testchamber.html
+
+let currentTrack = -1;
+let isPlaying = false;
+let isShuffled = false;
+let draggedWindow = null;
+let dragOffset = {x: 0, y: 0};
+let audioPlayer = null;
+
+// Update your tracks array to include the actual file paths
+// Put your .mp3 files in a folder like "music/" in your GitHub Pages repo
+const tracks = [
+    {
+        title: "Digital Daydream",
+        file: "music/Daydream.mp3"
+    }
+];
+
+// Initialize audio player
+function initAudioPlayer() {
+    audioPlayer = new Audio();
+    
+    // Audio event listeners
+    audioPlayer.addEventListener('loadedmetadata', () => {
+        console.log('Track loaded:', tracks[currentTrack].title);
+    });
+    
+    audioPlayer.addEventListener('ended', () => {
+        nextTrack();
+    });
+    
+    audioPlayer.addEventListener('error', (e) => {
+        console.error('Audio error:', e);
+        document.getElementById('now-playing').textContent = '❌ Error loading track';
+    });
+    
+    audioPlayer.addEventListener('canplay', () => {
+        if (isPlaying) {
+            audioPlayer.play().catch(e => console.error('Playback error:', e));
+        }
+    });
+}
+
+// Enhanced play track function
+function playTrack(index) {
+    if (index < 0 || index >= tracks.length) return;
+    
+    // Update UI
+    const trackElements = document.querySelectorAll('.track');
+    trackElements.forEach(t => t.classList.remove('playing'));
+    trackElements[index].classList.add('playing');
+    
+    // Stop current track if playing
+    if (audioPlayer) {
+        audioPlayer.pause();
+        audioPlayer.currentTime = 0;
+    }
+    
+    currentTrack = index;
+    const track = tracks[currentTrack];
+    
+    // Load new track
+    audioPlayer.src = track.file;
+    document.getElementById('now-playing').textContent = `♪ Loading: ${track.title} ♪`;
+    
+    // Try to play
+    audioPlayer.load();
+    audioPlayer.play().then(() => {
+        isPlaying = true;
+        document.getElementById('now-playing').textContent = `♪ Now Playing: ${track.title} ♪`;
+    }).catch(error => {
+        console.error('Playback failed:', error);
+        isPlaying = false;
+        document.getElementById('now-playing').textContent = `❌ Failed to load: ${track.title}`;
+    });
+}
+
+// Enhanced toggle play function
+function togglePlay() {
+    if (!audioPlayer) return;
+    
+    if (currentTrack === -1) {
+        playTrack(0);
+        return;
+    }
+    
+    if (isPlaying) {
+        audioPlayer.pause();
+        isPlaying = false;
+        document.getElementById('now-playing').textContent = `⏸ Paused: ${tracks[currentTrack].title}`;
+    } else {
+        audioPlayer.play().then(() => {
             isPlaying = true;
-        }
+            document.getElementById('now-playing').textContent = `♪ Now Playing: ${tracks[currentTrack].title} ♪`;
+        }).catch(error => {
+            console.error('Playback failed:', error);
+            document.getElementById('now-playing').textContent = `❌ Playback Error`;
+        });
+    }
+}
 
-        function togglePlay() {
-            if (currentTrack === -1) {
-                playTrack(0);
-            } else {
-                isPlaying = !isPlaying;
-                const display = document.getElementById('now-playing');
-                if (isPlaying) {
-                    display.textContent = `♪ Now Playing: ${tracks[currentTrack]} ♪`;
-                } else {
-                    display.textContent = `⏸ Paused: ${tracks[currentTrack]}`;
-                }
-            }
+// Enhanced next track function
+function nextTrack() {
+    if (isShuffled) {
+        // Random track (but not the same one)
+        let nextIndex;
+        do {
+            nextIndex = Math.floor(Math.random() * tracks.length);
+        } while (nextIndex === currentTrack && tracks.length > 1);
+        playTrack(nextIndex);
+    } else {
+        // Sequential
+        if (currentTrack < tracks.length - 1) {
+            playTrack(currentTrack + 1);
+        } else {
+            playTrack(0); // Loop back to start
         }
+    }
+}
 
-        function nextTrack() {
-            if (currentTrack < tracks.length - 1) {
-                playTrack(currentTrack + 1);
-            } else {
-                playTrack(0);
-            }
-        }
+// Enhanced previous track function
+function previousTrack() {
+    if (currentTrack > 0) {
+        playTrack(currentTrack - 1);
+    } else {
+        playTrack(tracks.length - 1); // Go to last track
+    }
+}
 
-        function previousTrack() {
-            if (currentTrack > 0) {
-                playTrack(currentTrack - 1);
-            } else {
-                playTrack(tracks.length - 1);
-            }
+// Enhanced shuffle function
+function toggleShuffle() {
+    isShuffled = !isShuffled;
+    const shuffleButton = document.querySelector('.player-button:last-child');
+    
+    if (isShuffled) {
+        shuffleButton.style.backgroundColor = 'rgba(0, 180, 255, 0.3)';
+        shuffleButton.style.color = '#00ff88';
+        document.getElementById('now-playing').textContent = '🔀 Shuffle Mode ON';
+    } else {
+        shuffleButton.style.backgroundColor = '';
+        shuffleButton.style.color = '#00b4ff';
+        document.getElementById('now-playing').textContent = '🔀 Shuffle Mode OFF';
+    }
+    
+    setTimeout(() => {
+        if (currentTrack !== -1 && isPlaying) {
+            document.getElementById('now-playing').textContent = `♪ Now Playing: ${tracks[currentTrack].title} ♪`;
+        } else if (currentTrack !== -1) {
+            document.getElementById('now-playing').textContent = `⏸ Paused: ${tracks[currentTrack].title}`;
+        } else {
+            document.getElementById('now-playing').textContent = '♫ Welcome to Internet Monarch ♫';
         }
+    }, 1500);
+}
 
-        function toggleShuffle() {
-            isShuffled = !isShuffled;
-            document.getElementById('now-playing').textContent = isShuffled ? 
-                '🔀 Shuffle Mode ON' : '🔀 Shuffle Mode OFF';
-            setTimeout(() => {
-                if (currentTrack !== -1) {
-                    document.getElementById('now-playing').textContent = `♪ Now Playing: ${tracks[currentTrack]} ♪`;
-                } else {
-                    document.getElementById('now-playing').textContent = '♫ Welcome to Internet Monarch ♫';
-                }
-            }, 1500);
+// Volume control (bonus feature)
+function setVolume(volume) {
+    if (audioPlayer) {
+        audioPlayer.volume = Math.max(0, Math.min(1, volume));
+    }
+}
+
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', () => {
+    initAudioPlayer();
+    
+    // Update track list display with actual titles
+    const trackElements = document.querySelectorAll('.track');
+    trackElements.forEach((element, index) => {
+        if (tracks[index]) {
+            element.textContent = `${index + 1}. ${tracks[index].title}`;
         }
+    });
+});
+
+// Add keyboard controls
+document.addEventListener('keydown', (e) => {
+    // Only work when music player window is active
+    const musicWindow = document.getElementById('music-player');
+    if (!musicWindow.classList.contains('active')) return;
+    
+    switch(e.key) {
+        case ' ':
+        case 'k':
+            e.preventDefault();
+            togglePlay();
+            break;
+        case 'ArrowRight':
+        case 'n':
+            e.preventDefault();
+            nextTrack();
+            break;
+        case 'ArrowLeft':
+        case 'p':
+            e.preventDefault();
+            previousTrack();
+            break;
+        case 's':
+            e.preventDefault();
+            toggleShuffle();
+            break;
+    }
+});
 
         function toggleStartMenu() {
             // Placeholder for start menu functionality
