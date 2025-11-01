@@ -296,6 +296,15 @@
 > www.*****.com
             </div>
         </div>
+        <div class="blog-post" style="animation-delay: 0.9s">
+            <div class="blog-title">ENTRY 011</div>
+            <div class="blog-date">01-11-2025</div>
+            <div class="blog-content">
+> New job is going well.
+> Should really stop to reflect on the success I've encountered.
+> Didn't stop then and won't stop now.
+            </div>
+        </div>
         
 
         <div class="load-more-sentinel" id="loadMoreSentinel"></div>
@@ -339,7 +348,7 @@
                 postDate.setDate(postDate.getDate() + i * 5);
                 
                 const dateString = postDate.toISOString().split('T')[0];
-                const postNumber = i + 11; // Starting from 006 after the initial 5 posts
+                const postNumber = i + 12; // Starting from 006 after the initial 5 posts
                 
                 const postHTML = `
                     <div class="blog-post" style="animation-delay: ${(i % postsPerPage) * 0.1}s">
