@@ -211,15 +211,14 @@
         </div>
 
         <div class="playlist" id="playlist">
-            <!-- Playlist items will be generated here -->
+
         </div>
 
         <audio id="audioPlayer"></audio>
     </div>
 
     <script>
-        // ADD YOUR AUDIO FILES HERE
-        // Replace these with your actual file paths in the GitHub Pages repo
+
         const tracks = [
             'media/audio/IC3peak Pain.mp3',
             'media/audio/track2.mp3',
@@ -240,7 +239,7 @@
         let currentTrack = 0;
         let isPlaying = false;
 
-        // Extract filename from path
+        // Extract
         function getTrackName(path) {
             return path.split('/').pop().replace(/\.[^/.]+$/, "");
         }
@@ -308,7 +307,7 @@
             });
         }
 
-        // Update active playlist item
+
         function updatePlaylist() {
             const items = playlistContainer.querySelectorAll('.playlist-item');
             items.forEach((item, index) => {
@@ -326,7 +325,7 @@
         nextBtn.addEventListener('click', nextTrack);
         volumeSlider.addEventListener('input', updateVolume);
 
-        // Auto-play next track when current ends
+        // Autoplayer
         audioPlayer.addEventListener('ended', nextTrack);
 
         // Initialize
