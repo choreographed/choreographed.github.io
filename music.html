@@ -244,7 +244,7 @@
             return path.split('/').pop().replace(/\.[^/.]+$/, "");
         }
 
-        // Load track
+
         function loadTrack(index) {
             currentTrack = index;
             audioPlayer.src = tracks[currentTrack];
@@ -252,7 +252,7 @@
             updatePlaylist();
         }
 
-        // Play/Pause toggle
+
         function togglePlayPause() {
             if (isPlaying) {
                 audioPlayer.pause();
@@ -265,7 +265,7 @@
             }
         }
 
-        // Previous track
+
         function prevTrack() {
             currentTrack = (currentTrack - 1 + tracks.length) % tracks.length;
             loadTrack(currentTrack);
@@ -274,7 +274,7 @@
             }
         }
 
-        // Next track
+        // Next
         function nextTrack() {
             currentTrack = (currentTrack + 1) % tracks.length;
             loadTrack(currentTrack);
@@ -283,14 +283,14 @@
             }
         }
 
-        // Update volume
+        //  volume
         function updateVolume() {
             const volume = volumeSlider.value;
             audioPlayer.volume = volume / 100;
             volumeValue.textContent = `${volume}%`;
         }
 
-        // Generate playlist
+
         function generatePlaylist() {
             playlistContainer.innerHTML = '';
             tracks.forEach((track, index) => {
