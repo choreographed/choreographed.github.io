@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INTERNET MONARCH - MUSIC</title>
+    <style>
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background-color: #000000;
+            color: #00b4ff;
+            font-family: 'Courier New', monospace;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-shadow: 0 0 5px #0066ff;
+        }
+        .header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 20px;
+            border-bottom: 1px solid #00b4ff;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 100;
+        }
+        .title {
+            color: white;
+            font-size: 2.5rem;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            text-shadow: 0 0 10px white;
+        }
+        .home-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: #00b4ff;
+            font-family: 'Courier New', monospace;
+            text-decoration: none;
+            text-shadow: 0 0 5px #0066ff;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 5px;
+            opacity: 0.8;
+            transition: all 0.3s;
+        }
+        .home-button:hover {
+            opacity: 1;
+            text-shadow: 0 0 8px #00b4ff;
+        }
+        .player-container {
+            max-width: 600px;
+            width: 90%;
+            padding: 40px;
+            border: 2px solid #00b4ff;
+            box-shadow: 0 0 20px #0066ff;
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+        .now-playing {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+            font-size: 1.2rem;
+            text-shadow: 0 0 8px white;
+            min-height: 1.5rem;
+        }
+        .controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .control-btn {
+            background: none;
+            border: 2px solid #00b4ff;
+            color: #00b4ff;
+            font-family: 'Courier New', monospace;
+            font-size: 1.2rem;
+            padding: 15px 20px;
+            cursor: pointer;
+            text-shadow: 0 0 5px #0066ff;
+            transition: all 0.3s;
+            min-width: 80px;
+        }
+        .control-btn:hover {
+            background-color: #00b4ff;
+            color: #000000;
+            text-shadow: none;
+            box-shadow: 0 0 15px #00b4ff;
+        }
+        .control-btn:active {
+            transform: scale(0.95);
+        }
+        .volume-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .volume-label {
+            color: #00b4ff;
+            min-width: 80px;
+        }
+        .volume-slider {
+            flex: 1;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 8px;
+            background: #003366;
+            outline: none;
+            border: 1px solid #00b4ff;
+        }
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #00b4ff;
+            cursor: pointer;
+            box-shadow: 0 0 10px #0066ff;
+        }
+        .volume-slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #00b4ff;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 0 10px #0066ff;
+        }
+        .playlist {
+            margin-top: 30px;
+            max-height: 300px;
+            overflow-y: auto;
+            border-top: 1px solid #003366;
+            padding-top: 20px;
+        }
+        .playlist-item {
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-bottom: 1px solid #003366;
+        }
+        .playlist-item:hover {
+            background-color: rgba(0, 180, 255, 0.1);
+            text-shadow: 0 0 8px #00b4ff;
+        }
+        .playlist-item.active {
+            background-color: rgba(0, 180, 255, 0.2);
+            color: white;
+            text-shadow: 0 0 8px white;
+        }
+        .playlist::-webkit-scrollbar {
+            width: 10px;
+        }
+        .playlist::-webkit-scrollbar-track {
+            background: #000000;
+            border: 1px solid #003366;
+        }
+        .playlist::-webkit-scrollbar-thumb {
+            background: #00b4ff;
+            box-shadow: 0 0 5px #0066ff;
+        }
+        @media (max-width: 768px) {
+            .title {
+                font-size: 1.8rem;
+            }
+            .player-container {
+                padding: 20px;
+            }
+            .controls {
+                gap: 10px;
+            }
+            .control-btn {
+                font-size: 1rem;
+                padding: 10px 15px;
+                min-width: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="title">INTERNET MONARCH - MUSIC</h1>
+        <a href="index.html" class="home-button">[HOME]</a>
+    </div>
+
+    <div class="player-container">
+        <div class="now-playing" id="nowPlaying">[ NO TRACK LOADED ]</div>
+        
+        <div class="controls">
+            <button class="control-btn" id="prevBtn">◄◄ PREV</button>
+            <button class="control-btn" id="playPauseBtn">▶ PLAY</button>
+            <button class="control-btn" id="nextBtn">NEXT ►►</button>
+        </div>
+
+        <div class="volume-container">
+            <div class="volume-label">VOLUME:</div>
+            <input type="range" min="0" max="100" value="70" class="volume-slider" id="volumeSlider">
+            <div class="volume-label" id="volumeValue">70%</div>
+        </div>
+
+        <div class="playlist" id="playlist">
+            <!-- Playlist items will be generated here -->
+        </div>
+
+        <audio id="audioPlayer"></audio>
+    </div>
+
+    <script>
+        // ADD YOUR AUDIO FILES HERE
+        // Replace these with your actual file paths in the GitHub Pages repo
+        const tracks = [
+            'media/audio/track1.mp3',
+            'media/audio/track2.mp3',
+            'media/audio/track3.mp3',
+            'media/audio/track4.mp3',
+            'media/audio/track5.mp3'
+        ];
+
+        const audioPlayer = document.getElementById('audioPlayer');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const volumeSlider = document.getElementById('volumeSlider');
+        const volumeValue = document.getElementById('volumeValue');
+        const nowPlaying = document.getElementById('nowPlaying');
+        const playlistContainer = document.getElementById('playlist');
+
+        let currentTrack = 0;
+        let isPlaying = false;
+
+        // Extract filename from path
+        function getTrackName(path) {
+            return path.split('/').pop().replace(/\.[^/.]+$/, "");
+        }
+
+        // Load track
+        function loadTrack(index) {
+            currentTrack = index;
+            audioPlayer.src = tracks[currentTrack];
+            nowPlaying.textContent = `[ ${getTrackName(tracks[currentTrack])} ]`;
+            updatePlaylist();
+        }
+
+        // Play/Pause toggle
+        function togglePlayPause() {
+            if (isPlaying) {
+                audioPlayer.pause();
+                playPauseBtn.textContent = '▶ PLAY';
+                isPlaying = false;
+            } else {
+                audioPlayer.play();
+                playPauseBtn.textContent = '❚❚ PAUSE';
+                isPlaying = true;
+            }
+        }
+
+        // Previous track
+        function prevTrack() {
+            currentTrack = (currentTrack - 1 + tracks.length) % tracks.length;
+            loadTrack(currentTrack);
+            if (isPlaying) {
+                audioPlayer.play();
+            }
+        }
+
+        // Next track
+        function nextTrack() {
+            currentTrack = (currentTrack + 1) % tracks.length;
+            loadTrack(currentTrack);
+            if (isPlaying) {
+                audioPlayer.play();
+            }
+        }
+
+        // Update volume
+        function updateVolume() {
+            const volume = volumeSlider.value;
+            audioPlayer.volume = volume / 100;
+            volumeValue.textContent = `${volume}%`;
+        }
+
+        // Generate playlist
+        function generatePlaylist() {
+            playlistContainer.innerHTML = '';
+            tracks.forEach((track, index) => {
+                const item = document.createElement('div');
+                item.className = 'playlist-item';
+                item.textContent = `> ${index + 1}. ${getTrackName(track)}`;
+                item.addEventListener('click', () => {
+                    loadTrack(index);
+                    if (isPlaying) {
+                        audioPlayer.play();
+                    }
+                });
+                playlistContainer.appendChild(item);
+            });
+        }
+
+        // Update active playlist item
+        function updatePlaylist() {
+            const items = playlistContainer.querySelectorAll('.playlist-item');
+            items.forEach((item, index) => {
+                if (index === currentTrack) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+        }
+
+        // Event listeners
+        playPauseBtn.addEventListener('click', togglePlayPause);
+        prevBtn.addEventListener('click', prevTrack);
+        nextBtn.addEventListener('click', nextTrack);
+        volumeSlider.addEventListener('input', updateVolume);
+
+        // Auto-play next track when current ends
+        audioPlayer.addEventListener('ended', nextTrack);
+
+        // Initialize
+        generatePlaylist();
+        loadTrack(0);
+        updateVolume();
+    </script>
+</body>
+</html>
