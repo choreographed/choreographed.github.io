@@ -12,7 +12,6 @@
             padding: 0;
             overflow: hidden;
         }
-
         body {
             background-color: #000000;
             color: #9d4edd;
@@ -23,7 +22,6 @@
             text-shadow: 0 0 5px #7b2cbf;
             font-size: 24px;
         }
-
         .home-button {
             position: absolute;
             top: 20px;
@@ -41,12 +39,10 @@
             transition: all 0.3s;
             z-index: 1000;
         }
-
         .home-button:hover {
             opacity: 1;
             text-shadow: 0 0 8px #00b4ff;
         }
-
         .text-container {
             position: absolute;
             top: 0;
@@ -56,10 +52,9 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 60px 40px;
+            padding: 60px 40px 80px;
             box-sizing: border-box;
         }
-
         .endless-text {
             color: #9d4edd;
             text-shadow: 0 0 8px #7b2cbf;
@@ -68,7 +63,6 @@
             line-height: 1.8;
             animation: pulse 2s ease-in-out infinite;
         }
-
         @keyframes pulse {
             0%, 100% {
                 opacity: 0.8;
@@ -79,20 +73,121 @@
                 text-shadow: 0 0 15px #9d4edd, 0 0 25px #7b2cbf;
             }
         }
+        
 
+        .music-player {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(20, 20, 20, 0.95);
+            border-top: 1px solid #7b2cbf;
+            padding: 12px 20px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            z-index: 1001;
+            box-shadow: 0 -2px 10px rgba(125, 44, 191, 0.3);
+        }
+        
+        .track-name {
+            color: #9d4edd;
+            font-size: 14px;
+            text-shadow: 0 0 5px #7b2cbf;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+        
+        .volume-label {
+            color: #9d4edd;
+            font-size: 12px;
+            text-shadow: 0 0 5px #7b2cbf;
+        }
+        
+        .volume-slider {
+            width: 100px;
+            height: 4px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: #333;
+            outline: none;
+            border-radius: 2px;
+        }
+        
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 14px;
+            height: 14px;
+            background: #9d4edd;
+            cursor: pointer;
+            border-radius: 50%;
+            box-shadow: 0 0 5px #7b2cbf;
+        }
+        
+        .volume-slider::-moz-range-thumb {
+            width: 14px;
+            height: 14px;
+            background: #9d4edd;
+            cursor: pointer;
+            border-radius: 50%;
+            border: none;
+            box-shadow: 0 0 5px #7b2cbf;
+        }
+        
+        .volume-value {
+            color: #9d4edd;
+            font-size: 12px;
+            text-shadow: 0 0 5px #7b2cbf;
+            min-width: 35px;
+        }
+        
         @media (max-width: 768px) {
             .endless-text {
                 font-size: 18px;
             }
             
             .text-container {
-                padding: 80px 20px 40px;
+                padding: 80px 20px 100px;
+            }
+            
+            .music-player {
+                padding: 10px 15px;
+                gap: 10px;
+            }
+            
+            .track-name {
+                font-size: 12px;
+            }
+            
+            .volume-slider {
+                width: 80px;
             }
         }
-
+        
         @media (max-width: 480px) {
             .endless-text {
                 font-size: 16px;
+            }
+            
+            .volume-slider {
+                width: 60px;
+            }
+            
+            .volume-label {
+                display: none;
             }
         }
     </style>
@@ -103,20 +198,67 @@
     <div class="text-container">
         <div class="endless-text" id="endless-text"></div>
     </div>
+    
 
+    <div class="music-player">
+        <div class="track-name" id="track-name">Click to start audio</div>
+        <div class="volume-control">
+            <span class="volume-label">VOL:</span>
+            <input type="range" min="0" max="100" value="70" class="volume-slider" id="volume-slider">
+            <span class="volume-value" id="volume-value">70%</span>
+        </div>
+    </div>
+    
+    <audio id="audio-player" loop></audio>
+    
     <script>
         const question = "Are you still there??? ";
         const textElement = document.getElementById('endless-text');
-        let repeatCount = 200; // Start with more text
+        let repeatCount = 200;
         
         // Generate the endless text
         let endlessQuestion = question.repeat(repeatCount);
         textElement.textContent = endlessQuestion;
         
-        // Add more text much faster
+
         setInterval(() => {
             textElement.textContent += question;
         }, 100);
+        
+        // Music Player 
+        const audio = document.getElementById('audio-player');
+        const trackName = document.getElementById('track-name');
+        const volumeSlider = document.getElementById('volume-slider');
+        const volumeValue = document.getElementById('volume-value');
+        
+
+        const audioUrl = 'media/audio/Dust.mp3'; 
+        const trackTitle = 'Dust'; 
+        
+        audio.src = audioUrl;
+        audio.volume = 0.7;
+        
+        let audioStarted = false;
+        
+
+        document.body.addEventListener('click', () => {
+            if (!audioStarted) {
+                audio.play().then(() => {
+                    audioStarted = true;
+                    trackName.textContent = trackTitle;
+                }).catch(err => {
+                    console.log('Audio playback failed:', err);
+                    trackName.textContent = 'Audio unavailable';
+                });
+            }
+        });
+        
+        // Volume control
+        volumeSlider.addEventListener('input', (e) => {
+            const volume = e.target.value / 100;
+            audio.volume = volume;
+            volumeValue.textContent = e.target.value + '%';
+        });
     </script>
 </body>
 </html>
