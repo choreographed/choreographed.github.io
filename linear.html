@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INTERNET MONARCH - LINEAR</title>
+    <style>
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background-color: #000000;
+            color: #00b4ff;
+            font-family: 'Courier New', monospace;
+            cursor: default;
+            text-shadow: 0 0 5px #0066ff;
+            overflow-y: auto;
+            font-size: 16px;
+        }
+        
+        /* Mobile adjustments */
+        @media (max-width: 768px) {
+            html, body {
+                font-size: 14px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            html, body {
+                font-size: 12px;
+            }
+        }
+        
+        .header {
+            padding: 20px;
+            border-bottom: 1px solid #00b4ff;
+            margin-bottom: 20px;
+            background-color: rgba(0, 0, 0, 0.9);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        @media (max-width: 768px) {
+            .header {
+                padding: 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header {
+                padding: 10px;
+            }
+        }
+        
+        .title {
+            color: white;
+            font-size: 2.5rem;
+            margin: 0;
+            text-shadow: 0 0 10px white;
+        }
+        
+        @media (max-width: 768px) {
+            .title {
+                font-size: 2rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .title {
+                font-size: 1.5rem;
+            }
+        }
+        
+        .content-container {
+            padding: 40px 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 120px);
+        }
+        
+        @media (max-width: 768px) {
+            .content-container {
+                padding: 30px 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .content-container {
+                padding: 20px 10px;
+            }
+        }
+        
+        .image-wrapper {
+            animation: fadeIn 2s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .main-image {
+            max-width: 100%;
+            max-height: 70vh;
+            width: auto;
+            height: auto;
+            border: 3px solid #00ff88;
+            box-shadow: 0 0 20px #008844, 0 0 40px #00ff88;
+            filter: sepia(50%) hue-rotate(120deg);
+            display: block;
+            animation: glitchBorder 3s infinite alternate;
+        }
+        
+        @keyframes glitchBorder {
+            0% { 
+                box-shadow: 0 0 20px #008844, 0 0 40px #00ff88;
+                border-color: #00ff88;
+            }
+            33% { 
+                box-shadow: 0 0 20px #0066ff, 0 0 40px #00b4ff;
+                border-color: #00b4ff;
+            }
+            66% { 
+                box-shadow: 0 0 20px #ff00ff, 0 0 40px #ff88ff;
+                border-color: #ff00ff;
+            }
+            100% { 
+                box-shadow: 0 0 20px #008844, 0 0 40px #00ff88;
+                border-color: #00ff88;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .main-image {
+                max-height: 60vh;
+                border-width: 2px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .main-image {
+                max-height: 50vh;
+                border-width: 2px;
+                box-shadow: 0 0 15px #008844, 0 0 30px #00ff88;
+            }
+        }
+        
+        .home-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: #00b4ff;
+            text-decoration: none;
+            font-size: 1rem;
+            opacity: 0.8;
+            transition: all 0.3s;
+        }
+        
+        @media (max-width: 768px) {
+            .home-button {
+                position: static;
+                display: block;
+                margin-top: 10px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .home-button {
+                font-size: 0.9rem;
+            }
+        }
+        
+        .home-button:hover {
+            opacity: 1;
+            text-shadow: 0 0 8px #00b4ff;
+        }
+        
+        .audio-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            color: #00b4ff;
+            font-size: 0.9rem;
+            opacity: 0.6;
+            cursor: pointer;
+            transition: opacity 0.3s;
+            z-index: 200;
+        }
+        
+        .audio-control:hover {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="title">LINEAR</h1>
+        <a href="index.html" class="home-button">[HOME]</a>
+    </div>
+
+    <div class="content-container">
+        <div class="image-wrapper">
+
+            <img src="media/images/Linear.jpg" class="main-image" alt="Display Image">
+        </div>
+    </div>
+
+
+    <audio id="bgAudio" loop>
+
+        <source src="media/audio/youraudio.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="audio-control" id="audioToggle">[SOUND: ON]</div>
+
+    <script>
+        const audio = document.getElementById('bgAudio');
+        const audioToggle = document.getElementById('audioToggle');
+        let isPlaying = false;
+
+
+        function attemptAutoplay() {
+            audio.play().then(() => {
+                isPlaying = true;
+                audioToggle.textContent = '[SOUND: ON]';
+            }).catch(err => {
+                console.log('Autoplay prevented:', err);
+                isPlaying = false;
+                audioToggle.textContent = '[SOUND: OFF - CLICK TO ENABLE]';
+            });
+        }
+
+
+        document.addEventListener('DOMContentLoaded', attemptAutoplay);
+
+
+        document.addEventListener('click', function enableAudio() {
+            if (!isPlaying) {
+                attemptAutoplay();
+            }
+            document.removeEventListener('click', enableAudio);
+        }, { once: true });
+
+
+        audioToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (isPlaying) {
+                audio.pause();
+                isPlaying = false;
+                audioToggle.textContent = '[SOUND: OFF]';
+            } else {
+                audio.play().then(() => {
+                    isPlaying = true;
+                    audioToggle.textContent = '[SOUND: ON]';
+                }).catch(err => {
+                    console.log('Playback failed:', err);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
