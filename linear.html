@@ -205,14 +205,11 @@
 
     <div class="content-container">
         <div class="image-wrapper">
-
             <img src="media/images/Linear.jpg" class="main-image" alt="Display Image">
         </div>
     </div>
 
-
     <audio id="bgAudio" loop>
-
         <source src="media/audio/linear.mp3" type="audio/mpeg">
     </audio>
 
@@ -224,43 +221,46 @@
         let isPlaying = false;
 
 
-        function attemptAutoplay() {
+        function updateDisplay() {
+            audioToggle.textContent = isPlaying ? '[SOUND: ON]' : '[SOUND: OFF]';
+        }
+
+        // Play audio
+        function playAudio() {
             audio.play().then(() => {
                 isPlaying = true;
-                audioToggle.textContent = '[SOUND: ON]';
+                updateDisplay();
             }).catch(err => {
-                console.log('Autoplay prevented:', err);
+                console.log('Playback failed:', err);
                 isPlaying = false;
-                audioToggle.textContent = '[SOUND: OFF - CLICK TO ENABLE]';
+                updateDisplay();
             });
         }
 
+        // Pause audio
+        function pauseAudio() {
+            audio.pause();
+            isPlaying = false;
+            updateDisplay();
+        }
 
-        document.addEventListener('DOMContentLoaded', attemptAutoplay);
-
-
-        document.addEventListener('click', function enableAudio() {
-            if (!isPlaying) {
-                attemptAutoplay();
-            }
-            document.removeEventListener('click', enableAudio);
-        }, { once: true });
-
-
-        audioToggle.addEventListener('click', (e) => {
-            e.stopPropagation();
+        document.addEventListener('click', () => {
             if (isPlaying) {
-                audio.pause();
-                isPlaying = false;
-                audioToggle.textContent = '[SOUND: OFF]';
+                pauseAudio();
             } else {
-                audio.play().then(() => {
-                    isPlaying = true;
-                    audioToggle.textContent = '[SOUND: ON]';
-                }).catch(err => {
-                    console.log('Playback failed:', err);
-                });
+                playAudio();
             }
+        });
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            playAudio();
+        });
+
+
+        audio.addEventListener('ended', () => {
+            isPlaying = false;
+            updateDisplay();
         });
     </script>
 </body>
