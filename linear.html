@@ -97,6 +97,26 @@
         
         .image-wrapper {
             animation: fadeIn 2s ease-in;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .image-counter {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 5px 10px;
+            border: 1px solid #00b4ff;
+            font-size: 0.9rem;
+            pointer-events: none;
+        }
+        
+        @media (max-width: 480px) {
+            .image-counter {
+                font-size: 0.8rem;
+                padding: 4px 8px;
+            }
         }
         
         @keyframes fadeIn {
@@ -205,7 +225,8 @@
 
     <div class="content-container">
         <div class="image-wrapper">
-            <img src="media/images/Linear.jpg" class="main-image" alt="Display Image">
+            <img src="media/images/Linear.jpg" class="main-image" alt="Display Image" id="mainImage">
+            <div class="image-counter" id="imageCounter">1 / 1</div>
         </div>
     </div>
 
@@ -218,14 +239,41 @@
     <script>
         const audio = document.getElementById('bgAudio');
         const audioToggle = document.getElementById('audioToggle');
+        const mainImage = document.getElementById('mainImage');
+        const imageCounter = document.getElementById('imageCounter');
         let isPlaying = false;
 
+
+        const images = [
+            'media/images/Linear.jpg',
+            'media/images/image2.jpg',
+            'media/images/image3.jpg',
+
+        ];
+        
+        let currentImageIndex = 0;
+
+        function updateImageCounter() {
+            imageCounter.textContent = `${currentImageIndex + 1} / ${images.length}`;
+        }
+
+        function nextImage() {
+            currentImageIndex = (currentImageIndex + 1) % images.length;
+            mainImage.src = images[currentImageIndex];
+            updateImageCounter();
+        }
+
+
+        mainImage.addEventListener('click', (e) => {
+            e.stopPropagation(); 
+            nextImage();
+        });
 
         function updateDisplay() {
             audioToggle.textContent = isPlaying ? '[SOUND: ON]' : '[SOUND: OFF]';
         }
 
-        // Play audio
+
         function playAudio() {
             audio.play().then(() => {
                 isPlaying = true;
@@ -237,26 +285,27 @@
             });
         }
 
-        // Pause audio
         function pauseAudio() {
             audio.pause();
             isPlaying = false;
             updateDisplay();
         }
 
-        document.addEventListener('click', () => {
-            if (isPlaying) {
-                pauseAudio();
-            } else {
-                playAudio();
+
+        document.addEventListener('click', (e) => {
+            if (e.target !== mainImage && !mainImage.contains(e.target)) {
+                if (isPlaying) {
+                    pauseAudio();
+                } else {
+                    playAudio();
+                }
             }
         });
 
-
         document.addEventListener('DOMContentLoaded', () => {
+            updateImageCounter();
             playAudio();
         });
-
 
         audio.addEventListener('ended', () => {
             isPlaying = false;
