@@ -305,6 +305,16 @@
 > Didn't stop then and won't stop now.
             </div>
         </div>
+
+                <div class="blog-post" style="animation-delay: 0.9s">
+            <div class="blog-title">ENTRY 012</div>
+            <div class="blog-date">25-02-2026</div>
+            <div class="blog-content">
+> People I've known for years and months online are leaving.
+> Making me realise how I took certain people and conversations for granted, I'll work on that.
+> Maybe the time is coming closer for me to hop offline and focus on real life.
+            </div>
+        </div>
         
 
         <div class="load-more-sentinel" id="loadMoreSentinel"></div>
@@ -348,7 +358,7 @@
                 postDate.setDate(postDate.getDate() + i * 5);
                 
                 const dateString = postDate.toISOString().split('T')[0];
-                const postNumber = i + 12; // Starting from 006 after the initial 5 posts
+                const postNumber = i + 13; // Starting from 006 after the initial 5 posts
                 
                 const postHTML = `
                     <div class="blog-post" style="animation-delay: ${(i % postsPerPage) * 0.1}s">
