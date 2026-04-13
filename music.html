@@ -12,13 +12,13 @@
             padding: 0;
         }
         body {
-            background-color: #000000;
-            color: #00b4ff;
+            background-color: #F5F0E8;
+            color: #4A4035;
             font-family: 'Courier New', monospace;
             display: flex;
             align-items: center;
             justify-content: center;
-            text-shadow: 0 0 5px #0066ff;
+            text-shadow: none;
         }
         .header {
             position: absolute;
@@ -26,26 +26,26 @@
             left: 0;
             right: 0;
             padding: 20px;
-            border-bottom: 1px solid #00b4ff;
-            background-color: rgba(0, 0, 0, 0.9);
+            border-bottom: 1px solid #C8BFA8;
+            background-color: rgba(245, 240, 232, 0.95);
             z-index: 100;
         }
         .title {
-            color: white;
+            color: #2C2420;
             font-size: 2.5rem;
             margin: 0;
             padding: 0;
             text-align: center;
-            text-shadow: 0 0 10px white;
+            text-shadow: none;
         }
         .home-button {
             position: absolute;
             top: 20px;
             right: 20px;
-            color: #00b4ff;
+            color: #7A6E62;
             font-family: 'Courier New', monospace;
             text-decoration: none;
-            text-shadow: 0 0 5px #0066ff;
+            text-shadow: none;
             background: none;
             border: none;
             cursor: pointer;
@@ -56,22 +56,22 @@
         }
         .home-button:hover {
             opacity: 1;
-            text-shadow: 0 0 8px #00b4ff;
+            text-shadow: none;
         }
         .player-container {
             max-width: 600px;
             width: 90%;
             padding: 40px;
-            border: 2px solid #00b4ff;
-            box-shadow: 0 0 20px #0066ff;
-            background-color: rgba(0, 0, 0, 0.8);
+            border: 2px solid #C8BFA8;
+            box-shadow: none;
+            background-color: rgba(245, 240, 232, 0.9);
         }
         .now-playing {
             text-align: center;
             margin-bottom: 30px;
-            color: #ffff00;
+            color: #6B5A4E;
             font-size: 1.2rem;
-            text-shadow: 0 0 15px #ffff00, 0 0 30px #ffaa00;
+            text-shadow: none;
             min-height: 1.5rem;
         }
         .controls {
@@ -83,21 +83,21 @@
         }
         .control-btn {
             background: none;
-            border: 2px solid #00b4ff;
-            color: #00b4ff;
+            border: 2px solid #C8BFA8;
+            color: #4A4035;
             font-family: 'Courier New', monospace;
             font-size: 1.2rem;
             padding: 15px 20px;
             cursor: pointer;
-            text-shadow: 0 0 5px #0066ff;
+            text-shadow: none;
             transition: all 0.3s;
             min-width: 80px;
         }
         .control-btn:hover {
-            background-color: #00b4ff;
-            color: #000000;
+            background-color: #C8BFA8;
+            color: #2C2420;
             text-shadow: none;
-            box-shadow: 0 0 15px #00b4ff;
+            box-shadow: none;
         }
         .control-btn:active {
             transform: scale(0.95);
@@ -109,7 +109,7 @@
             margin-bottom: 20px;
         }
         .volume-label {
-            color: #00b4ff;
+            color: #7A6E62;
             min-width: 80px;
         }
         .volume-slider {
@@ -117,59 +117,59 @@
             -webkit-appearance: none;
             appearance: none;
             height: 8px;
-            background: #003366;
+            background: #DDD8CE;
             outline: none;
-            border: 1px solid #00b4ff;
+            border: 1px solid #C8BFA8;
         }
         .volume-slider::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
             width: 20px;
             height: 20px;
-            background: #00b4ff;
+            background: #9A8E82;
             cursor: pointer;
-            box-shadow: 0 0 10px #0066ff;
+            box-shadow: none;
         }
         .volume-slider::-moz-range-thumb {
             width: 20px;
             height: 20px;
-            background: #00b4ff;
+            background: #9A8E82;
             cursor: pointer;
             border: none;
-            box-shadow: 0 0 10px #0066ff;
+            box-shadow: none;
         }
         .playlist {
             margin-top: 30px;
             max-height: 300px;
             overflow-y: auto;
-            border-top: 1px solid #003366;
+            border-top: 1px solid #C8BFA8;
             padding-top: 20px;
         }
         .playlist-item {
             padding: 10px;
             cursor: pointer;
             transition: all 0.3s;
-            border-bottom: 1px solid #003366;
+            border-bottom: 1px solid #DDD8CE;
         }
         .playlist-item:hover {
-            background-color: rgba(0, 180, 255, 0.1);
-            text-shadow: 0 0 8px #00b4ff;
+            background-color: rgba(200, 191, 168, 0.3);
+            text-shadow: none;
         }
         .playlist-item.active {
-            background-color: rgba(0, 180, 255, 0.2);
-            color: white;
-            text-shadow: 0 0 8px white;
+            background-color: rgba(200, 191, 168, 0.5);
+            color: #2C2420;
+            text-shadow: none;
         }
         .playlist::-webkit-scrollbar {
             width: 10px;
         }
         .playlist::-webkit-scrollbar-track {
-            background: #000000;
-            border: 1px solid #003366;
+            background: #F5F0E8;
+            border: 1px solid #DDD8CE;
         }
         .playlist::-webkit-scrollbar-thumb {
-            background: #00b4ff;
-            box-shadow: 0 0 5px #0066ff;
+            background: #C8BFA8;
+            box-shadow: none;
         }
         @media (max-width: 768px) {
             .title {
