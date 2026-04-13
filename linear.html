@@ -10,11 +10,11 @@
             height: 100%;
             margin: 0;
             padding: 0;
-            background-color: #000000;
-            color: #00b4ff;
+            background-color: #F5F0E8;
+            color: #4A4035;
             font-family: 'Courier New', monospace;
             cursor: default;
-            text-shadow: 0 0 5px #0066ff;
+            text-shadow: none;
             overflow-y: auto;
             font-size: 16px;
         }
@@ -34,9 +34,9 @@
         
         .header {
             padding: 20px;
-            border-bottom: 1px solid #00b4ff;
+            border-bottom: 1px solid #C8BFA8;
             margin-bottom: 20px;
-            background-color: rgba(0, 0, 0, 0.9);
+            background-color: rgba(245, 240, 232, 0.95);
             position: sticky;
             top: 0;
             z-index: 100;
@@ -55,10 +55,10 @@
         }
         
         .title {
-            color: white;
+            color: #2C2420;
             font-size: 2.5rem;
             margin: 0;
-            text-shadow: 0 0 10px white;
+            text-shadow: none;
         }
         
         @media (max-width: 768px) {
@@ -105,11 +105,12 @@
             position: absolute;
             bottom: 10px;
             right: 10px;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(245, 240, 232, 0.9);
             padding: 5px 10px;
-            border: 1px solid #00b4ff;
+            border: 1px solid #C8BFA8;
             font-size: 0.9rem;
             pointer-events: none;
+            color: #6B5A4E;
         }
         
         @media (max-width: 480px) {
@@ -129,29 +130,29 @@
             max-height: 70vh;
             width: auto;
             height: auto;
-            border: 3px solid #00ff88;
-            box-shadow: 0 0 20px #008844, 0 0 40px #00ff88;
-            filter: sepia(50%) hue-rotate(120deg);
+            border: 3px solid #C8BFA8;
+            box-shadow: none;
+            filter: sepia(20%);
             display: block;
             animation: glitchBorder 3s infinite alternate;
         }
         
         @keyframes glitchBorder {
             0% { 
-                box-shadow: 0 0 20px #008844, 0 0 40px #00ff88;
-                border-color: #00ff88;
+                box-shadow: none;
+                border-color: #C8BFA8;
             }
             33% { 
-                box-shadow: 0 0 20px #0066ff, 0 0 40px #00b4ff;
-                border-color: #00b4ff;
+                box-shadow: none;
+                border-color: #9A8E82;
             }
             66% { 
-                box-shadow: 0 0 20px #ff00ff, 0 0 40px #ff88ff;
-                border-color: #ff00ff;
+                box-shadow: none;
+                border-color: #7A6E62;
             }
             100% { 
-                box-shadow: 0 0 20px #008844, 0 0 40px #00ff88;
-                border-color: #00ff88;
+                box-shadow: none;
+                border-color: #C8BFA8;
             }
         }
         
@@ -166,7 +167,6 @@
             .main-image {
                 max-height: 50vh;
                 border-width: 2px;
-                box-shadow: 0 0 15px #008844, 0 0 30px #00ff88;
             }
         }
         
@@ -174,7 +174,7 @@
             position: absolute;
             top: 20px;
             right: 20px;
-            color: #00b4ff;
+            color: #7A6E62;
             text-decoration: none;
             font-size: 1rem;
             opacity: 0.8;
@@ -197,14 +197,14 @@
         
         .home-button:hover {
             opacity: 1;
-            text-shadow: 0 0 8px #00b4ff;
+            text-shadow: none;
         }
         
         .audio-control {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            color: #00b4ff;
+            color: #7A6E62;
             font-size: 0.9rem;
             opacity: 0.6;
             cursor: pointer;
