@@ -10,12 +10,12 @@
             height: 100%;
             margin: 0;
             padding: 0;
-            background-color: #000000;
-            color: #00b4ff;
+            background-color: #F5F0E8;
+            color: #4A4035;
             font-family: 'Courier New', monospace;
             line-height: 1.4;
             cursor: default;
-            text-shadow: 0 0 5px #0066ff;
+            text-shadow: none;
             overflow-y: auto;
             font-size: 16px;
         }
@@ -37,9 +37,9 @@
         
         .header {
             padding: 20px;
-            border-bottom: 1px solid #00b4ff;
+            border-bottom: 1px solid #C8BFA8;
             margin-bottom: 20px;
-            background-color: rgba(0, 0, 0, 0.9);
+            background-color: rgba(245, 240, 232, 0.95);
             position: sticky;
             top: 0;
             z-index: 100;
@@ -58,10 +58,10 @@
         }
         
         .title {
-            color: white;
+            color: #2C2420;
             font-size: 2.5rem;
             margin: 0;
-            text-shadow: 0 0 10px white;
+            text-shadow: none;
         }
         
         @media (max-width: 768px) {
@@ -96,7 +96,7 @@
         
         .ape-fact {
             margin-bottom: 25px;
-            border-left: 3px solid #00ff88;
+            border-left: 3px solid #4A6B4A;
             padding-left: 15px;
             animation: glitch 2s infinite alternate;
             white-space: pre-line;
@@ -110,32 +110,30 @@
         }
         
         @keyframes glitch {
-            0% { text-shadow: 0 0 5px #00b4ff; }
-            20% { text-shadow: 0 0 8px #ff00ff; }
-            100% { text-shadow: 0 0 5px #00ff88; }
+            0% { text-shadow: none; }
+            20% { text-shadow: none; }
+            100% { text-shadow: none; }
         }
         
         .ape-image {
             max-width: 100%;
             height: auto;
-            border: 1px solid #00ff88;
+            border: 1px solid #4A6B4A;
             margin: 20px 0;
-            box-shadow: 0 0 15px #008844;
-            filter: sepia(50%) hue-rotate(120deg);
+            box-shadow: none;
+            filter: sepia(20%);
             display: block;
         }
         
         @media (max-width: 768px) {
             .ape-image {
                 margin: 15px 0;
-                box-shadow: 0 0 10px #008844;
             }
         }
         
         @media (max-width: 480px) {
             .ape-image {
                 margin: 10px 0;
-                box-shadow: 0 0 8px #008844;
             }
         }
         
@@ -143,7 +141,7 @@
             position: absolute;
             top: 20px;
             right: 20px;
-            color: #00b4ff;
+            color: #7A6E62;
             text-decoration: none;
             font-size: 1rem;
             opacity: 0.8;
@@ -166,7 +164,7 @@
         
         .home-button:hover {
             opacity: 1;
-            text-shadow: 0 0 8px #00b4ff;
+            text-shadow: none;
         }
     </style>
 </head>
