@@ -13,23 +13,23 @@
             overflow: hidden;
         }
         body {
-            background-color: #000000;
-            color: #9d4edd;
+            background-color: #F5F0E8;
+            color: #6B5A4E;
             font-family: 'Courier New', monospace;
             line-height: 1.6;
             cursor: default;
             padding: 0;
-            text-shadow: 0 0 5px #7b2cbf;
+            text-shadow: none;
             font-size: 24px;
         }
         .home-button {
             position: absolute;
             top: 20px;
             right: 20px;
-            color: #00b4ff;
+            color: #7A6E62;
             font-family: 'Courier New', monospace;
             text-decoration: none;
-            text-shadow: 0 0 5px #0066ff;
+            text-shadow: none;
             background: none;
             border: none;
             cursor: pointer;
@@ -41,7 +41,7 @@
         }
         .home-button:hover {
             opacity: 1;
-            text-shadow: 0 0 8px #00b4ff;
+            text-shadow: none;
         }
         .text-container {
             position: absolute;
@@ -56,8 +56,8 @@
             box-sizing: border-box;
         }
         .endless-text {
-            color: #9d4edd;
-            text-shadow: 0 0 8px #7b2cbf;
+            color: #6B5A4E;
+            text-shadow: none;
             font-size: 24px;
             text-align: center;
             line-height: 1.8;
@@ -65,12 +65,12 @@
         }
         @keyframes pulse {
             0%, 100% {
-                opacity: 0.8;
-                text-shadow: 0 0 8px #7b2cbf;
+                opacity: 0.6;
+                text-shadow: none;
             }
             50% {
                 opacity: 1;
-                text-shadow: 0 0 15px #9d4edd, 0 0 25px #7b2cbf;
+                text-shadow: none;
             }
         }
         
@@ -80,8 +80,8 @@
             bottom: 0;
             left: 0;
             width: 100%;
-            background: rgba(20, 20, 20, 0.95);
-            border-top: 1px solid #7b2cbf;
+            background: rgba(245, 240, 232, 0.97);
+            border-top: 1px solid #C8BFA8;
             padding: 12px 20px;
             box-sizing: border-box;
             display: flex;
@@ -89,13 +89,13 @@
             justify-content: space-between;
             gap: 20px;
             z-index: 1001;
-            box-shadow: 0 -2px 10px rgba(125, 44, 191, 0.3);
+            box-shadow: none;
         }
         
         .track-name {
-            color: #9d4edd;
+            color: #6B5A4E;
             font-size: 14px;
-            text-shadow: 0 0 5px #7b2cbf;
+            text-shadow: none;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -111,9 +111,9 @@
         }
         
         .volume-label {
-            color: #9d4edd;
+            color: #7A6E62;
             font-size: 12px;
-            text-shadow: 0 0 5px #7b2cbf;
+            text-shadow: none;
         }
         
         .volume-slider {
@@ -121,7 +121,7 @@
             height: 4px;
             -webkit-appearance: none;
             appearance: none;
-            background: #333;
+            background: #DDD8CE;
             outline: none;
             border-radius: 2px;
         }
@@ -131,26 +131,26 @@
             appearance: none;
             width: 14px;
             height: 14px;
-            background: #9d4edd;
+            background: #9A8E82;
             cursor: pointer;
             border-radius: 50%;
-            box-shadow: 0 0 5px #7b2cbf;
+            box-shadow: none;
         }
         
         .volume-slider::-moz-range-thumb {
             width: 14px;
             height: 14px;
-            background: #9d4edd;
+            background: #9A8E82;
             cursor: pointer;
             border-radius: 50%;
             border: none;
-            box-shadow: 0 0 5px #7b2cbf;
+            box-shadow: none;
         }
         
         .volume-value {
-            color: #9d4edd;
+            color: #7A6E62;
             font-size: 12px;
-            text-shadow: 0 0 5px #7b2cbf;
+            text-shadow: none;
             min-width: 35px;
         }
         
