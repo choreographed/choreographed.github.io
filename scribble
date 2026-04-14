@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INTERNET MONARCH - MY SCRIBBLES</title>
+    <style>
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #F5F0E8;
+            color: #4A4035;
+            font-family: 'Courier New', monospace;
+            line-height: 1.6;
+            cursor: default;
+            padding: 0;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+        }
+
+        /* ── HEADER ── */
+        .header {
+            padding: 20px;
+            border-bottom: 1px solid #C8BFA8;
+            margin-bottom: 0;
+            position: sticky;
+            top: 0;
+            background-color: rgba(245, 240, 232, 0.97);
+            z-index: 100;
+        }
+
+        .title {
+            color: #2C2420;
+            font-size: 2.5rem;
+            margin: 0 0 4px 0;
+            padding: 0;
+            letter-spacing: 0.02em;
+        }
+
+        .subtitle {
+            color: #9A8E82;
+            font-size: 0.8rem;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-buttons {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .nav-button {
+            color: #7A6E62;
+            font-family: 'Courier New', monospace;
+            text-decoration: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 5px;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+
+        .nav-button:hover {
+            opacity: 1;
+        }
+
+        /* ── LAYOUT ── */
+        .page-container {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 0 20px 60px;
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            gap: 0;
+            min-height: calc(100vh - 90px);
+        }
+
+        /* ── SIDEBAR ── */
+        .sidebar {
+            border-right: 1px solid #C8BFA8;
+            padding: 30px 20px 30px 0;
+            position: sticky;
+            top: 90px;
+            height: fit-content;
+        }
+
+        .sidebar-label {
+            color: #9A8E82;
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            margin-bottom: 14px;
+            text-transform: uppercase;
+        }
+
+        .sidebar-entry {
+            display: block;
+            color: #7A6E62;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            text-decoration: none;
+            padding: 6px 0;
+            border-bottom: 1px solid transparent;
+            transition: color 0.2s, border-color 0.2s;
+            cursor: pointer;
+            background: none;
+            border: none;
+            text-align: left;
+            width: 100%;
+            line-height: 1.4;
+        }
+
+        .sidebar-entry:hover,
+        .sidebar-entry.active {
+            color: #2C2420;
+        }
+
+        .sidebar-entry.active::before {
+            content: '> ';
+        }
+
+        .sidebar-num {
+            color: #C8BFA8;
+            font-size: 0.7rem;
+            margin-right: 4px;
+        }
+
+        /* ── MAIN CONTENT ── */
+        .main-content {
+            padding: 30px 0 30px 30px;
+        }
+
+        /* ── INDEX VIEW ── */
+        .index-view {
+            display: block;
+        }
+
+        .index-header {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #C8BFA8;
+        }
+
+        .index-header-text {
+            color: #9A8E82;
+            font-size: 0.85rem;
+            line-height: 1.7;
+            white-space: pre-wrap;
+        }
+
+        .scribble-card {
+            padding: 20px 0;
+            border-bottom: 1px solid #C8BFA8;
+            cursor: pointer;
+            transition: background 0.15s;
+            opacity: 0;
+            animation: fadeUp 0.4s ease forwards;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(8px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .scribble-card:hover .card-title {
+            color: #2C2420;
+        }
+
+        .card-meta {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .card-num {
+            color: #C8BFA8;
+            font-size: 0.75rem;
+        }
+
+        .card-date {
+            color: #9A8E82;
+            font-size: 0.75rem;
+        }
+
+        .card-tag {
+            color: #9A8E82;
+            font-size: 0.7rem;
+            border: 1px solid #C8BFA8;
+            padding: 1px 6px;
+        }
+
+        .card-title {
+            color: #4A4035;
+            font-size: 1.15rem;
+            margin-bottom: 8px;
+            transition: color 0.2s;
+        }
+
+        .card-excerpt {
+            color: #7A6E62;
+            font-size: 0.82rem;
+            line-height: 1.65;
+        }
+
+        .card-read-more {
+            display: inline-block;
+            margin-top: 10px;
+            color: #9A8E82;
+            font-size: 0.75rem;
+            transition: color 0.2s;
+        }
+
+        .scribble-card:hover .card-read-more {
+            color: #4A4035;
+        }
+
+        /* ── ESSAY VIEW ── */
+        .essay-view {
+            display: none;
+        }
+
+        .essay-view.visible {
+            display: block;
+            animation: fadeUp 0.35s ease forwards;
+        }
+
+        .essay-back {
+            display: inline-block;
+            color: #9A8E82;
+            font-size: 0.8rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-family: 'Courier New', monospace;
+            padding: 0;
+            margin-bottom: 24px;
+            transition: color 0.2s;
+        }
+
+        .essay-back:hover {
+            color: #4A4035;
+        }
+
+        .essay-meta {
+            margin-bottom: 28px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #C8BFA8;
+        }
+
+        .essay-num {
+            color: #C8BFA8;
+            font-size: 0.75rem;
+            margin-bottom: 6px;
+        }
+
+        .essay-title {
+            color: #2C2420;
+            font-size: 1.6rem;
+            margin-bottom: 8px;
+            line-height: 1.25;
+        }
+
+        .essay-tagline {
+            color: #9A8E82;
+            font-size: 0.8rem;
+        }
+
+        .essay-date-tag {
+            display: flex;
+            gap: 14px;
+            margin-top: 10px;
+            align-items: center;
+        }
+
+        .essay-date {
+            color: #9A8E82;
+            font-size: 0.75rem;
+        }
+
+        .essay-tag-badge {
+            color: #9A8E82;
+            font-size: 0.7rem;
+            border: 1px solid #C8BFA8;
+            padding: 1px 6px;
+        }
+
+        .essay-body {
+            color: #4A4035;
+            font-size: 0.88rem;
+            line-height: 1.85;
+            white-space: pre-wrap;
+        }
+
+        .essay-body p {
+            margin: 0 0 1.4em 0;
+        }
+
+        .essay-body .section-break {
+            text-align: center;
+            color: #C8BFA8;
+            margin: 2em 0;
+            display: block;
+        }
+
+        .essay-body blockquote {
+            border-left: 2px solid #C8BFA8;
+            margin: 1.5em 0;
+            padding-left: 16px;
+            color: #7A6E62;
+            font-style: normal;
+        }
+
+        .essay-body .highlight {
+            color: #4A6B4A;
+        }
+
+        /* ── MOBILE ── */
+        @media (max-width: 680px) {
+            .title { font-size: 1.8rem; }
+            .page-container {
+                grid-template-columns: 1fr;
+                padding: 0 15px 40px;
+            }
+            .sidebar {
+                border-right: none;
+                border-bottom: 1px solid #C8BFA8;
+                position: static;
+                padding: 20px 0;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 4px;
+            }
+            .sidebar-label { width: 100%; }
+            .sidebar-entry { width: auto; padding: 4px 8px; border: 1px solid #C8BFA8; }
+            .sidebar-entry.active::before { content: ''; }
+            .sidebar-entry.active { color: #2C2420; border-color: #9A8E82; }
+            .main-content { padding: 20px 0 0; }
+            .nav-buttons { top: 15px; right: 15px; }
+            .nav-button { font-size: 0.85rem; }
+        }
+
+        @media (max-width: 400px) {
+            .title { font-size: 1.4rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1 class="title">MY SCRIBBLES</h1>
+        <p class="subtitle">> personal essays & half-formed thoughts</p>
+        <div class="nav-buttons">
+            <a href="blog.html" class="nav-button">[BLOG]</a>
+            <a href="index.html" class="nav-button">[HOME]</a>
+        </div>
+    </div>
+
+    <div class="page-container">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-label">> index</div>
+        </aside>
+
+        <!-- MAIN -->
+        <main class="main-content">
+
+            <!-- INDEX VIEW -->
+            <div class="index-view" id="indexView">
+                <div class="index-header">
+                    <div class="index-header-text">> These are my scribbles.
+> Unfinished ideas, worked-through opinions, things I needed
+> to put somewhere before they disappeared.
+> 
+> Not journalism. Not academia. Just thought on paper.</div>
+                </div>
+                <div id="scribbleList"></div>
+            </div>
+
+            <!-- ESSAY VIEW -->
+            <div class="essay-view" id="essayView">
+                <button class="essay-back" id="essayBack">[ &larr; back to index ]</button>
+                <div class="essay-meta">
+                    <div class="essay-num" id="essayNum"></div>
+                    <div class="essay-title" id="essayTitle"></div>
+                    <div class="essay-tagline" id="essayTagline"></div>
+                    <div class="essay-date-tag">
+                        <span class="essay-date" id="essayDate"></span>
+                        <span class="essay-tag-badge" id="essayTagBadge"></span>
+                    </div>
+                </div>
+                <div class="essay-body" id="essayBody"></div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        // ── DATA ──────────────────────────────────────────────────────────────────
+        // Add your scribbles here. `body` supports basic HTML tags:
+        // <p>, <blockquote>, <span class="highlight">, <span class="section-break">
+        const scribbles = [
+            {
+                id: "S001",
+                date: "00-00-0000",
+                tag: "draft",
+                title: "TITLE OF YOUR FIRST SCRIBBLE",
+                tagline: "A short line about what this one is.",
+                excerpt: "This is a brief excerpt or opening line that draws the reader in — one or two sentences, just enough to give a flavour.",
+                body: `<p>Your essay body goes here. Write freely. This is your space.</p>
+
+<p>You can add as many paragraphs as you need. The format will handle spacing and line length automatically.</p>
+
+<span class="section-break">* * *</span>
+
+<p>Use a section break above to divide your essay into parts.</p>
+
+<blockquote>Blockquotes look like this — good for quoting something that stuck with you, or for isolating a line you want to land differently.</blockquote>
+
+<p>And <span class="highlight">green text like this</span> can be used to mark something you consider especially true, or worth returning to.</p>`
+            },
+            {
+                id: "S002",
+                date: "00-00-0000",
+                tag: "thought",
+                title: "TITLE OF YOUR SECOND SCRIBBLE",
+                tagline: "Another short descriptor.",
+                excerpt: "Opening line of your second piece. Give the reader a reason to click.",
+                body: `<p>Body of your second essay. Replace this with your actual writing.</p>`
+            }
+            // Add more scribble objects here following the same shape.
+        ];
+
+        // ── BUILD SIDEBAR ─────────────────────────────────────────────────────────
+        const sidebar = document.getElementById('sidebar');
+        const label = sidebar.querySelector('.sidebar-label');
+
+        scribbles.forEach((s, i) => {
+            const btn = document.createElement('button');
+            btn.className = 'sidebar-entry';
+            btn.dataset.index = i;
+            btn.innerHTML = `<span class="sidebar-num">${s.id}</span>${s.title.split(' ').slice(0, 4).join(' ')}${s.title.split(' ').length > 4 ? '…' : ''}`;
+            btn.addEventListener('click', () => openEssay(i));
+            sidebar.appendChild(btn);
+        });
+
+        // ── BUILD INDEX ───────────────────────────────────────────────────────────
+        const scribbleList = document.getElementById('scribbleList');
+
+        scribbles.forEach((s, i) => {
+            const card = document.createElement('div');
+            card.className = 'scribble-card';
+            card.style.animationDelay = `${i * 0.08}s`;
+            card.innerHTML = `
+                <div class="card-meta">
+                    <span class="card-num">${s.id}</span>
+                    <span class="card-date">${s.date}</span>
+                    <span class="card-tag">${s.tag}</span>
+                </div>
+                <div class="card-title">${s.title}</div>
+                <div class="card-excerpt">> ${s.excerpt}</div>
+                <span class="card-read-more">[ read → ]</span>
+            `;
+            card.addEventListener('click', () => openEssay(i));
+            scribbleList.appendChild(card);
+        });
+
+        // ── NAVIGATION ────────────────────────────────────────────────────────────
+        const indexView = document.getElementById('indexView');
+        const essayView = document.getElementById('essayView');
+        const essayBack = document.getElementById('essayBack');
+
+        function openEssay(index) {
+            const s = scribbles[index];
+            document.getElementById('essayNum').textContent = s.id;
+            document.getElementById('essayTitle').textContent = s.title;
+            document.getElementById('essayTagline').textContent = '> ' + s.tagline;
+            document.getElementById('essayDate').textContent = s.date;
+            document.getElementById('essayTagBadge').textContent = s.tag;
+            document.getElementById('essayBody').innerHTML = s.body;
+
+            indexView.style.display = 'none';
+            essayView.classList.add('visible');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Highlight active sidebar entry
+            document.querySelectorAll('.sidebar-entry').forEach((btn, i) => {
+                btn.classList.toggle('active', i === index);
+            });
+        }
+
+        essayBack.addEventListener('click', () => {
+            essayView.classList.remove('visible');
+            indexView.style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            document.querySelectorAll('.sidebar-entry').forEach(btn => btn.classList.remove('active'));
+        });
+    </script>
+</body>
+</html>
