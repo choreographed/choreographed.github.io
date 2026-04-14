@@ -75,7 +75,7 @@
             opacity: 1;
         }
 
-        /* ── LAYOUT ── */
+
         .page-container {
             width: 100%;
             padding: 0 0 60px;
@@ -85,7 +85,7 @@
             min-height: calc(100vh - 90px);
         }
 
-        /* ── SIDEBAR ── */
+
         .sidebar {
             border-right: 1px solid #C8BFA8;
             padding: 30px 20px 30px 20px;
@@ -134,13 +134,13 @@
             margin-right: 4px;
         }
 
-        /* ── MAIN CONTENT ── */
+
         .main-content {
             padding: 30px 40px 30px 40px;
             max-width: 820px;
         }
 
-        /* ── INDEX VIEW ── */
+
         .index-view {
             display: block;
         }
@@ -225,7 +225,7 @@
             color: #4A4035;
         }
 
-        /* ── ESSAY VIEW ── */
+
         .essay-view {
             display: none;
         }
@@ -325,7 +325,7 @@
             color: #4A6B4A;
         }
 
-        /* ── MOBILE ── */
+
         @media (max-width: 680px) {
             .title { font-size: 1.8rem; }
             .page-container {
@@ -368,15 +368,15 @@
 
     <div class="page-container">
 
-        <!-- SIDEBAR -->
+
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-label">> index</div>
         </aside>
 
-        <!-- MAIN -->
+
         <main class="main-content">
 
-            <!-- INDEX VIEW -->
+
             <div class="index-view" id="indexView">
                 <div class="index-header">
                     <div class="index-header-text">> These are my scribbles.
@@ -388,7 +388,7 @@
                 <div id="scribbleList"></div>
             </div>
 
-            <!-- ESSAY VIEW -->
+
             <div class="essay-view" id="essayView">
                 <button class="essay-back" id="essayBack">[ &larr; back to index ]</button>
                 <div class="essay-meta">
@@ -442,7 +442,7 @@
             // Add more scribble objects here following the same shape.
         ];
 
-        // ── BUILD SIDEBAR ─────────────────────────────────────────────────────────
+
         const sidebar = document.getElementById('sidebar');
         const label = sidebar.querySelector('.sidebar-label');
 
@@ -455,7 +455,6 @@
             sidebar.appendChild(btn);
         });
 
-        // ── BUILD INDEX ───────────────────────────────────────────────────────────
         const scribbleList = document.getElementById('scribbleList');
 
         scribbles.forEach((s, i) => {
@@ -476,7 +475,7 @@
             scribbleList.appendChild(card);
         });
 
-        // ── NAVIGATION ────────────────────────────────────────────────────────────
+
         const indexView = document.getElementById('indexView');
         const essayView = document.getElementById('essayView');
         const essayBack = document.getElementById('essayBack');
@@ -494,7 +493,7 @@
             essayView.classList.add('visible');
             window.scrollTo({ top: 0, behavior: 'smooth' });
 
-            // Highlight active sidebar entry
+
             document.querySelectorAll('.sidebar-entry').forEach((btn, i) => {
                 btn.classList.toggle('active', i === index);
             });
