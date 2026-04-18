@@ -287,6 +287,7 @@
             "> SYSTEM TIME: " + new Date().toLocaleTimeString(),
             "> APE STATUS: Not active.",
             "> APE HEALTH: Good.",
+            "> VISITORS: loading...",
             "",
             "> THE INTERNET MONARCH",
             "",
@@ -444,5 +445,18 @@
         }
         setInterval(updateTime, 1000);
     </script>
+
+    <script>
+  fetch('https://ip-counter.jonesjon10.workers.dev/')
+    .then(res => res.json())
+    .then(data => {
+      document.querySelectorAll('.terminal-line').forEach(el => {
+        if (el.textContent.includes('VISITORS:')) {
+          el.textContent = '> VISITORS: ' + data.count.toLocaleString();
+        }
+      });
+    })
+    .catch(() => {});
+</script>
 </body>
 </html>
