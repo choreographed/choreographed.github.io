@@ -434,7 +434,7 @@
             }
         }
 
-        //  time
+
         function updateTime() {
             const timeElements = document.querySelectorAll('.terminal-line');
             timeElements.forEach(element => {
@@ -447,19 +447,46 @@
     </script>
 
 <script>
+  function updateVisitorCount(count) {
+    const formatted = count.toLocaleString();
+    const lines = document.querySelectorAll('.terminal-line');
+    let updated = false;
+
+    lines.forEach(el => {
+      if (el.textContent.includes('VISITORS:')) {
+
+        for (const node of el.childNodes) {
+          if (node.nodeType === Node.TEXT_NODE && node.textContent.includes('VISITORS:')) {
+            node.textContent = node.textContent.replace(/VISITORS:.*/, 'VISITORS: ' + formatted);
+            updated = true;
+          }
+        }
+
+        if (!updated) {
+          el.textContent = '> VISITORS: ' + formatted;
+          updated = true;
+        }
+      }
+    });
+
+    return updated;
+  }
+
+  function waitAndUpdate(count, retries = 20) {
+    if (retries <= 0) return; // give up after ~4 seconds
+    if (!updateVisitorCount(count)) {
+      setTimeout(() => waitAndUpdate(count, retries - 1), 200);
+    }
+  }
+
   fetch('https://ip-counter.internetmonarch.workers.dev/')
     .then(res => res.json())
     .then(data => {
-      const count = data.count.toLocaleString();
-      const interval = setInterval(() => {
-        const lines = document.querySelectorAll('.terminal-line');
-        lines.forEach(el => {
-          if (el.textContent.includes('VISITORS:')) {
-            el.textContent = '> VISITORS: ' + count;
-            clearInterval(interval);
-          }
-        });
-      }, 200);
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => waitAndUpdate(data.count));
+      } else {
+        waitAndUpdate(data.count);
+      }
     })
     .catch(() => {});
 </script>
