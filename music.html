@@ -80,6 +80,7 @@
             align-items: center;
             gap: 20px;
             margin-bottom: 30px;
+            flex-wrap: wrap;
         }
         .control-btn {
             background: none;
@@ -101,6 +102,10 @@
         }
         .control-btn:active {
             transform: scale(0.95);
+        }
+        .control-btn.active-toggle {
+            background-color: #9A8E82;
+            color: #2C2420;
         }
         .volume-container {
             display: flex;
@@ -202,6 +207,7 @@
             <button class="control-btn" id="prevBtn">◄◄ PREV</button>
             <button class="control-btn" id="playPauseBtn">▶ PLAY</button>
             <button class="control-btn" id="nextBtn">NEXT ►►</button>
+            <button class="control-btn" id="repeatBtn">REPEAT: OFF</button>
         </div>
 
         <div class="volume-container">
@@ -235,6 +241,7 @@
         const playPauseBtn = document.getElementById('playPauseBtn');
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
+        const repeatBtn = document.getElementById('repeatBtn');
         const volumeSlider = document.getElementById('volumeSlider');
         const volumeValue = document.getElementById('volumeValue');
         const nowPlaying = document.getElementById('nowPlaying');
@@ -242,8 +249,9 @@
 
         let currentTrack = 0;
         let isPlaying = false;
+        let isRepeating = false;
 
-        // Extract
+
         function getTrackName(path) {
             return path.split('/').pop().replace(/\.[^/.]+$/, "");
         }
@@ -278,7 +286,7 @@
             }
         }
 
-        // Next
+
         function nextTrack() {
             currentTrack = (currentTrack + 1) % tracks.length;
             loadTrack(currentTrack);
@@ -287,7 +295,15 @@
             }
         }
 
-        //  volume
+
+        function toggleRepeat() {
+            isRepeating = !isRepeating;
+            repeatBtn.textContent = isRepeating ? 'REPEAT: ON' : 'REPEAT: OFF';
+            repeatBtn.classList.toggle('active-toggle', isRepeating);
+            audioPlayer.loop = isRepeating;
+        }
+
+
         function updateVolume() {
             const volume = volumeSlider.value;
             audioPlayer.volume = volume / 100;
@@ -323,14 +339,19 @@
             });
         }
 
-        // Event listeners
+
         playPauseBtn.addEventListener('click', togglePlayPause);
         prevBtn.addEventListener('click', prevTrack);
         nextBtn.addEventListener('click', nextTrack);
+        repeatBtn.addEventListener('click', toggleRepeat);
         volumeSlider.addEventListener('input', updateVolume);
 
-        // Autoplayer
-        audioPlayer.addEventListener('ended', nextTrack);
+
+        audioPlayer.addEventListener('ended', () => {
+            if (!isRepeating) {
+                nextTrack();
+            }
+        });
 
         // Initialize
         generatePlaylist();
