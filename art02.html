@@ -96,7 +96,7 @@
         <div class="endless-text" id="endless-text"></div>
     </div>
     <script>
-        const question = "I have failed";
+        const question = "Small Steps";
         const textElement = document.getElementById('endless-text');
         let repeatCount = 200; // Start with more text
         
@@ -104,7 +104,7 @@
         let endlessQuestion = question.repeat(repeatCount);
         textElement.textContent = endlessQuestion;
         
-        // Add more text much faster
+
         setInterval(() => {
             textElement.textContent += question;
         }, 100);
