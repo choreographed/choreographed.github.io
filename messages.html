@@ -120,6 +120,7 @@
             }
         }
 
+
         label {
             display: block;
             color: #4A6B4A;
@@ -137,7 +138,7 @@
             border-radius: 0;
             padding: 10px;
             font-family: 'Courier New', monospace;
-            /* 16px stops iOS zooming in on focus */
+
             font-size: 16px;
             line-height: 1.4;
             outline: none;
@@ -259,7 +260,7 @@
                 <input id="msg-name" name="name" type="text" maxlength="40" placeholder="anonymous">
             </div>
 
-
+            <!-- honeypot -->
             <div class="hp" aria-hidden="true">
                 <label for="msg-website">Leave this empty</label>
                 <input id="msg-website" name="website" type="text" tabindex="-1" autocomplete="off">
@@ -309,7 +310,7 @@
             return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
         }
 
-
+        // Messages are user input, so they are only ever inserted with textContent.
         function renderMessage(m) {
             const wrap = document.createElement('div');
             wrap.className = 'msg';
@@ -320,7 +321,7 @@
 
             const meta = document.createElement('div');
             meta.className = 'msg-meta';
-            meta.textContent = 'from ' + m.name + '  ·  ' + formatDate(m.ts);
+            meta.textContent = 'from ' + m.name + '  \u00B7  ' + formatDate(m.ts);
 
             wrap.appendChild(text);
             wrap.appendChild(meta);
