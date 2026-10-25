@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INTERNET MONARCH - MESSAGES</title>
+    <style>
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background-color: #F5F0E8;
+            color: #4A4035;
+            font-family: 'Courier New', monospace;
+            line-height: 1.4;
+            cursor: default;
+            text-shadow: none;
+            overflow-y: auto;
+            font-size: 16px;
+        }
+
+        @media (max-width: 768px) {
+            html, body {
+                font-size: 14px;
+                line-height: 1.5;
+            }
+        }
+
+        @media (max-width: 480px) {
+            html, body {
+                font-size: 12px;
+                line-height: 1.6;
+            }
+        }
+
+        .header {
+            padding: 20px;
+            border-bottom: 1px solid #C8BFA8;
+            margin-bottom: 20px;
+            background-color: rgba(245, 240, 232, 0.95);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        @media (max-width: 768px) {
+            .header { padding: 15px; }
+        }
+
+        @media (max-width: 480px) {
+            .header { padding: 10px; }
+        }
+
+        .title {
+            color: #2C2420;
+            font-size: 2.5rem;
+            margin: 0;
+            text-shadow: none;
+        }
+
+        @media (max-width: 768px) {
+            .title { font-size: 2rem; }
+        }
+
+        @media (max-width: 480px) {
+            .title { font-size: 1.5rem; }
+        }
+
+        .home-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: #7A6E62;
+            text-decoration: none;
+            font-size: 1rem;
+            opacity: 0.8;
+            transition: all 0.3s;
+        }
+
+        @media (max-width: 768px) {
+            .home-button {
+                position: static;
+                display: block;
+                margin-top: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .home-button { font-size: 0.9rem; }
+        }
+
+        .home-button:hover { opacity: 1; }
+
+        .content-container {
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 768px) {
+            .content-container { padding: 15px; }
+        }
+
+        @media (max-width: 480px) {
+            .content-container { padding: 10px; }
+        }
+
+        .block {
+            margin-bottom: 25px;
+            border-left: 3px solid #4A6B4A;
+            padding-left: 15px;
+            white-space: pre-line;
+        }
+
+        @media (max-width: 480px) {
+            .block {
+                margin-bottom: 20px;
+                padding-left: 10px;
+            }
+        }
+
+        label {
+            display: block;
+            color: #4A6B4A;
+            margin: 0 0 6px 0;
+        }
+
+        textarea,
+        input[type="text"] {
+            display: block;
+            width: 100%;
+            box-sizing: border-box;
+            background-color: rgba(255, 255, 255, 0.35);
+            color: #2C2420;
+            border: 1px solid #C8BFA8;
+            border-radius: 0;
+            padding: 10px;
+            font-family: 'Courier New', monospace;
+            /* 16px stops iOS zooming in on focus */
+            font-size: 16px;
+            line-height: 1.4;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        textarea { resize: vertical; min-height: 110px; }
+
+        textarea:focus,
+        input[type="text"]:focus { border-color: #4A6B4A; }
+
+        ::placeholder { color: #9A8E82; }
+
+        .field { margin-bottom: 16px; }
+
+        .counter {
+            text-align: right;
+            color: #9A8E82;
+            font-size: 0.85rem;
+            margin-top: 4px;
+        }
+
+
+        .hp {
+            position: absolute;
+            left: -9999px;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+        }
+
+        .btn {
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            color: #4A6B4A;
+            background: none;
+            border: none;
+            padding: 5px 0;
+            cursor: pointer;
+            opacity: 0.85;
+            transition: opacity 0.3s;
+        }
+
+        .btn:hover:not(:disabled) { opacity: 1; }
+        .btn:disabled { opacity: 0.4; cursor: default; }
+
+        .status {
+            min-height: 1.4em;
+            margin-top: 8px;
+            color: #7A6E62;
+        }
+
+        .status.error { color: #8A3B2E; }
+        .status.ok { color: #4A6B4A; }
+
+
+        .divider {
+            margin: 30px 0 14px 0;
+            color: #C8BFA8;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .list-status {
+            color: #7A6E62;
+            margin-bottom: 14px;
+        }
+
+        .msg {
+            margin-bottom: 22px;
+            padding-left: 15px;
+            border-left: 1px solid #C8BFA8;
+            animation: fadeIn 0.6s ease-in both;
+        }
+
+        @media (max-width: 480px) {
+            .msg { padding-left: 10px; }
+        }
+
+        .msg-text {
+            color: #2C2420;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+
+        .msg-meta {
+            margin-top: 4px;
+            color: #7A6E62;
+            font-size: 0.9rem;
+            overflow-wrap: anywhere;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="title">MESSAGES</h1>
+        <a href="index.html" class="home-button">[HOME]</a>
+    </div>
+
+    <div class="content-container">
+
+        <div class="block">&gt; LEAVE A MESSAGE
+&gt; Say anything. It stays here forever.</div>
+
+        <form id="message-form" autocomplete="off">
+            <div class="field">
+                <label for="msg-text">> MESSAGE</label>
+                <textarea id="msg-text" name="message" maxlength="500" rows="5" required></textarea>
+                <div class="counter" id="counter">0 / 500</div>
+            </div>
+
+            <div class="field">
+                <label for="msg-name">> FROM</label>
+                <input id="msg-name" name="name" type="text" maxlength="40" placeholder="anonymous">
+            </div>
+
+
+            <div class="hp" aria-hidden="true">
+                <label for="msg-website">Leave this empty</label>
+                <input id="msg-website" name="website" type="text" tabindex="-1" autocomplete="off">
+            </div>
+
+            <button type="submit" id="send" class="btn">[SEND]</button>
+            <div class="status" id="status" role="status" aria-live="polite"></div>
+        </form>
+
+        <div class="divider">------------------------------------------------------------------------------------------</div>
+
+        <div id="list-status" class="list-status"></div>
+        <div id="list"></div>
+        <button type="button" id="more" class="btn" hidden>[LOAD MORE]</button>
+    </div>
+
+    <script>
+
+        const API = 'https://messages.internetmonarch.workers.dev/';
+        const MAX_LENGTH = 500;
+
+        const form = document.getElementById('message-form');
+        const textEl = document.getElementById('msg-text');
+        const nameEl = document.getElementById('msg-name');
+        const counterEl = document.getElementById('counter');
+        const sendBtn = document.getElementById('send');
+        const statusEl = document.getElementById('status');
+        const listEl = document.getElementById('list');
+        const listStatusEl = document.getElementById('list-status');
+        const moreBtn = document.getElementById('more');
+
+        let cursor = null;
+        let loading = false;
+
+        function setStatus(text, kind) {
+            statusEl.textContent = text;
+            statusEl.className = 'status' + (kind ? ' ' + kind : '');
+        }
+
+        function updateCounter() {
+            counterEl.textContent = textEl.value.length + ' / ' + MAX_LENGTH;
+        }
+
+        function formatDate(ts) {
+            const d = new Date(ts);
+            const pad = n => String(n).padStart(2, '0');
+            return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+        }
+
+
+        function renderMessage(m) {
+            const wrap = document.createElement('div');
+            wrap.className = 'msg';
+
+            const text = document.createElement('div');
+            text.className = 'msg-text';
+            text.textContent = m.message;
+
+            const meta = document.createElement('div');
+            meta.className = 'msg-meta';
+            meta.textContent = 'from ' + m.name + '  ·  ' + formatDate(m.ts);
+
+            wrap.appendChild(text);
+            wrap.appendChild(meta);
+            return wrap;
+        }
+
+        async function loadMessages() {
+            if (loading) return;
+            loading = true;
+            moreBtn.hidden = true;
+            if (!listEl.children.length) listStatusEl.textContent = '> loading messages...';
+
+            try {
+                const url = API + (cursor ? '?cursor=' + encodeURIComponent(cursor) : '');
+                const res = await fetch(url);
+                if (!res.ok) throw new Error('bad response');
+                const data = await res.json();
+
+                data.messages.forEach(m => listEl.appendChild(renderMessage(m)));
+                cursor = data.cursor || null;
+                moreBtn.hidden = !cursor;
+                listStatusEl.textContent = listEl.children.length ? '' : '> No messages yet. Be the first.';
+            } catch (err) {
+                listStatusEl.textContent = '> Could not load messages right now.';
+                if (cursor) moreBtn.hidden = false;
+            } finally {
+                loading = false;
+            }
+        }
+
+        textEl.addEventListener('input', updateCounter);
+        moreBtn.addEventListener('click', loadMessages);
+
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const message = textEl.value.trim();
+            if (!message) {
+                setStatus('> Write something first.', 'error');
+                return;
+            }
+
+            sendBtn.disabled = true;
+            setStatus('> sending...');
+
+            try {
+                let res;
+                try {
+                    res = await fetch(API, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            message: message,
+                            name: nameEl.value.trim(),
+                            website: document.getElementById('msg-website').value
+                        })
+                    });
+                } catch (netErr) {
+                    throw new Error('Could not reach the message server.');
+                }
+
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) throw new Error(data.error || 'Something went wrong.');
+
+                textEl.value = '';
+                updateCounter();
+                setStatus('> Sent. It will stay here forever.', 'ok');
+
+                if (data.message) {
+                    listStatusEl.textContent = '';
+                    listEl.insertBefore(renderMessage(data.message), listEl.firstChild);
+                }
+            } catch (err) {
+                setStatus('> ERROR: ' + err.message, 'error');
+            } finally {
+                sendBtn.disabled = false;
+            }
+        });
+
+        updateCounter();
+        loadMessages();
+    </script>
+</body>
+</html>
